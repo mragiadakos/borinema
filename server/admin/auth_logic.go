@@ -2,21 +2,24 @@ package admin
 
 import (
 	"net/http"
+
+	"github.com/mragiadakos/borinema/server/utils"
 )
 
-type AuthorizationAdminOpts struct {
+type AdminLogic struct{}
+type AuthorizationAdminInput struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type SuccessAuthorization struct {
+type AuthorizeAdminOutput struct {
 	Token string `json:"token"`
 }
 
-func AuthorizeAdmin(opts AuthorizationAdminOpts,
-	isValid func(AuthorizationAdminOpts) bool,
-	getToken func() (string, error)) (*SuccessAuthorization, *ErrorMsg) {
-	errMsg := NewErrorMsg()
+func (al AdminLogic) AuthorizeAdmin(opts AuthorizationAdminInput,
+	isValid func(AuthorizationAdminInput) bool,
+	getToken func() (string, error)) (*AuthorizeAdminOutput, *utils.ErrorMsg) {
+	errMsg := utils.NewErrorMsg()
 	if len(opts.Username) == 0 {
 		errMsg.VariableErrors["username"] = ERR_USERNAME_EMPTY
 		errMsg.Status = http.StatusUnprocessableEntity
@@ -28,7 +31,7 @@ func AuthorizeAdmin(opts AuthorizationAdminOpts,
 	if errMsg.HasErrors() {
 		return nil, errMsg
 	}
-	sa := SuccessAuthorization{}
+	sa := AuthorizeAdminOutput{}
 	var err error
 	sa.Token, err = getToken()
 	if err != nil {
@@ -42,6 +45,6 @@ type IsAdminOutput struct {
 	IsAdmin bool `json:"is_admin"`
 }
 
-func IsAdmin(isAdmin func() bool) IsAdminOutput {
+func (al AdminLogic) IsAdmin(isAdmin func() bool) IsAdminOutput {
 	return IsAdminOutput{IsAdmin: isAdmin()}
 }

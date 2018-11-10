@@ -7,8 +7,9 @@ import (
 )
 
 func TestAuthorizationAdminFailEmptyUsername(t *testing.T) {
-	opts := AuthorizationAdminOpts{}
-	_, errMsg := AuthorizeAdmin(opts, func(opts AuthorizationAdminOpts) bool {
+	opts := AuthorizationAdminInput{}
+	al := AdminLogic{}
+	_, errMsg := al.AuthorizeAdmin(opts, func(opts AuthorizationAdminInput) bool {
 		return false
 	}, func() (string, error) {
 		return "", nil
@@ -18,10 +19,11 @@ func TestAuthorizationAdminFailEmptyUsername(t *testing.T) {
 }
 
 func TestAuthorizationAdminFailPasswordNotValid(t *testing.T) {
-	opts := AuthorizationAdminOpts{
+	opts := AuthorizationAdminInput{
 		Username: "lallalala",
 	}
-	_, errMsg := AuthorizeAdmin(opts, func(opts AuthorizationAdminOpts) bool {
+	al := AdminLogic{}
+	_, errMsg := al.AuthorizeAdmin(opts, func(opts AuthorizationAdminInput) bool {
 		return false
 	}, func() (string, error) {
 		return "", nil
@@ -31,11 +33,13 @@ func TestAuthorizationAdminFailPasswordNotValid(t *testing.T) {
 }
 
 func TestAuthorizationAdminSuccess(t *testing.T) {
-	opts := AuthorizationAdminOpts{
+	opts := AuthorizationAdminInput{
 		Username: "admin",
 		Password: "admin",
 	}
-	_, errMsg := AuthorizeAdmin(opts, func(opts AuthorizationAdminOpts) bool {
+	al := AdminLogic{}
+
+	_, errMsg := al.AuthorizeAdmin(opts, func(opts AuthorizationAdminInput) bool {
 		return true
 	}, func() (string, error) {
 		return "", nil
@@ -44,7 +48,9 @@ func TestAuthorizationAdminSuccess(t *testing.T) {
 }
 
 func TestIsAdminSuccess(t *testing.T) {
-	isAdmin := IsAdmin(func() bool {
+	al := AdminLogic{}
+
+	isAdmin := al.IsAdmin(func() bool {
 		return true
 	})
 	assert.True(t, isAdmin.IsAdmin)

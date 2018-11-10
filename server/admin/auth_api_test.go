@@ -1,4 +1,4 @@
-package ctrls
+package admin
 
 import (
 	"encoding/json"
@@ -10,12 +10,12 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/mragiadakos/borinema/server/conf"
-	"github.com/mragiadakos/borinema/server/logic/admin"
+	"github.com/mragiadakos/borinema/server/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdminAuthorizationSuccess(t *testing.T) {
-	auth := admin.AuthorizationAdminOpts{
+	auth := AuthorizationAdminInput{
 		Username: "admin",
 		Password: "admin",
 	}
@@ -27,7 +27,7 @@ func TestAdminAuthorizationSuccess(t *testing.T) {
 	authJson, _ := json.Marshal(auth)
 	e := echo.New()
 	jwtConfig := middleware.JWTConfig{
-		Claims:     &jwtCustomClaims{},
+		Claims:     &utils.JwtCustomClaims{},
 		SigningKey: []byte(config.JwtSecret),
 	}
 
@@ -35,10 +35,10 @@ func TestAdminAuthorizationSuccess(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	aa := AdminApi{}
+	aa := adminApi{}
 	if assert.NoError(t, aa.Login(config)(c)) {
 		assert.Equal(t, http.StatusAccepted, rec.Code)
-		sa := admin.SuccessAuthorization{}
+		sa := AuthorizeAdminOutput{}
 		err := json.Unmarshal(rec.Body.Bytes(), &sa)
 		assert.Nil(t, err)
 		assert.NotEqual(t, 0, len(sa.Token))
@@ -48,10 +48,10 @@ func TestAdminAuthorizationSuccess(t *testing.T) {
 		req.Header.Set(echo.HeaderAuthorization, "Bearer "+sa.Token)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		aa := AdminApi{}
+		aa := adminApi{}
 		isAdminHandler := middleware.JWTWithConfig(jwtConfig)(aa.IsAdmin())
 		if assert.NoError(t, isAdminHandler(c)) {
-			iao := admin.IsAdminOutput{}
+			iao := IsAdminOutput{}
 			err := json.Unmarshal(rec.Body.Bytes(), &iao)
 			assert.Nil(t, err)
 			assert.True(t, iao.IsAdmin)

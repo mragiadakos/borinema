@@ -7,6 +7,8 @@ type Configuration struct {
 	AdminUsername string
 	AdminPassword string
 	JwtSecret     string
+	Folder        string
+	DatabaseFile  string
 }
 
 func GetConfigurations(path string) (*Configuration, error) {
@@ -41,6 +43,20 @@ func GetConfigurations(path string) (*Configuration, error) {
 		newConf.JwtSecret = jwtSecret
 	} else {
 		newConf.JwtSecret = "secret"
+	}
+
+	folder, ok := conf.Get("folder").(string)
+	if ok {
+		newConf.Folder = folder
+	} else {
+		newConf.Folder = "downloads"
+	}
+
+	dbFile, ok := conf.Get("database_file").(string)
+	if ok {
+		newConf.DatabaseFile = dbFile
+	} else {
+		newConf.DatabaseFile = "bonirema.db"
 	}
 	return &newConf, nil
 }

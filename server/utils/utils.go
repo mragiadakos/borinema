@@ -1,4 +1,4 @@
-package admin
+package utils
 
 type ErrorMsg struct {
 	VariableErrors map[string]error

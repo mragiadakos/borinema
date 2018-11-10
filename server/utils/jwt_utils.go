@@ -1,4 +1,4 @@
-package ctrls
+package utils
 
 import (
 	"fmt"
@@ -9,12 +9,12 @@ import (
 	"github.com/mragiadakos/borinema/server/conf"
 )
 
-type jwtCustomClaims struct {
+type JwtCustomClaims struct {
 	Admin bool `json:"admin"`
 	jwt.StandardClaims
 }
 
-func getTokenAdmin(config conf.Configuration) func() (string, error) {
+func GetTokenAdmin(config conf.Configuration) func() (string, error) {
 	return func() (string, error) {
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
@@ -23,13 +23,13 @@ func getTokenAdmin(config conf.Configuration) func() (string, error) {
 		return token.SignedString([]byte(config.JwtSecret))
 	}
 }
-func isAdmin(c echo.Context) bool {
+func IsAdmin(c echo.Context) bool {
 	user, ok := c.Get("user").(*jwt.Token)
 	if !ok {
 		fmt.Println("user", c.Get("Authentication"))
 		return false
 	}
-	claims, ok := user.Claims.(*jwtCustomClaims)
+	claims, ok := user.Claims.(*JwtCustomClaims)
 	if !ok {
 		fmt.Println("claims", user.Claims)
 		return false

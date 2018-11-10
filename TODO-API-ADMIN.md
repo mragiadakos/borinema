@@ -24,7 +24,8 @@ RESP
 RESP
 200 {
     ID
-    name
+    state: downloading | error | finished 
+    filetype : mp4 | webme   
 }
 404
 
@@ -34,12 +35,14 @@ RESP
 404
 
 
-### POST /api/admin/movies
+### POST /api/admin/movies/link
 REQ 
-Form to upload the movie
+{
+
+}
 RESP
 200 {
-    ID
+    id
 }
 401
 500
