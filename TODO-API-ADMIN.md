@@ -13,6 +13,10 @@ RESP
     401 failure
 
 ### GET /api/admin/movies
+Req {
+    last_seen_date
+    limit
+}
 RESP
 200 [] {
     ID
@@ -25,7 +29,7 @@ RESP
 200 {
     ID
     state: downloading | error | finished 
-    filetype : mp4 | webme   
+    filetype : mp4 | webm  
 }
 404
 
@@ -57,6 +61,11 @@ RESP
     ID
     name
 }
+404
+
+### PUT /api/admin/movies/:id/select
+RESP
+204
 404
 
 ### GET /api/admin/movies/:id/subtitles
@@ -91,64 +100,6 @@ RESP
     authentication: public | common_password | user_mode
 }
 
-## API for Playlist
-
-### GET /api/admin/playlist
-RESP
-200 [] {
-    movie_id : optional id
-    order
-    break : optional seconds
-}
-
-### POST /api/admin/playlist
-REQ
-{
-    movie_id : optional id
-    order
-    break : optional seconds
-}
-RESP
-204 Success
-422 movie_id does not exists
-422 break is 0 or lower
-422 taken place of the order
-422 order can not be less than 0
-
-### DELETE /api/admin/playlist/:order
-RESP
-204 Success
-404 does not exists
-
-## API for users
-these are enabled if in the configuration the "authentication" equals "user_mode"
-
-
-### GET /api/admin/users
-RESP
-200 [] {
-    id
-    email
-    is_operator
-    is_blocked
-}
-
-### PUT /api/admin/users/:id
-REQ
-{
-    id
-    is_operator
-    is_blocked
-    is_approved
-}
-RESP
-204
-404
-
-### DELETE /api/admin/users/:id
-RESP
-204
-404
 
 
 

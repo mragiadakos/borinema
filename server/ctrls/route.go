@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/mragiadakos/borinema/server/admin"
 	"github.com/mragiadakos/borinema/server/conf"
+	"github.com/mragiadakos/borinema/server/db"
 	"github.com/mragiadakos/borinema/server/utils"
 )
 
@@ -24,7 +25,7 @@ func authorizeAdministrator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func Run(config conf.Configuration) {
 	r := echo.New()
-	db, err := admin.NewDB(config.DatabaseFile)
+	db, err := db.NewDB(config.DatabaseFile)
 	if err != nil {
 		log.Fatal("Error: " + err.Error())
 	}
@@ -46,7 +47,7 @@ func Run(config conf.Configuration) {
 
 	adminGroup.GET("/isAdmin", aa.IsAdmin())
 	adminGroup.POST("/api/admin/movies/link", aa.DownloadMovieLink(config))
-	adminGroup.GET("/api/admin/movies/:id", aa.GeMovie(config))
+	adminGroup.GET("/api/admin/movies/:id", aa.GetMovie(config))
 
 	r.GET("/admin", aa.AdminPage())
 	r.Start(":" + config.Port)

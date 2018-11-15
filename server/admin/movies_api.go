@@ -11,12 +11,12 @@ import (
 	"github.com/h2non/filetype"
 	"github.com/labstack/echo"
 	"github.com/mragiadakos/borinema/server/conf"
+	"github.com/mragiadakos/borinema/server/db"
 	uuid "github.com/satori/go.uuid"
 )
 
 func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
-	movie := DbMovie{}
-	err := aa.db.Model(&DbMovie{}).Last(&movie).Error
+	dbmovie, err := db.GetMovieByUuid(aa.db, uuid)
 	if err != nil {
 		log.Println("Error:", err)
 		return
@@ -30,11 +30,13 @@ func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
 	}
 	log.Printf("Info: Downloading %v...\n", req.URL())
 	resp := client.Do(req)
+	log.Println(resp.HTTPResponse)
 	log.Printf("Info: http status  %v\n", resp.HTTPResponse.Status)
+
 	if resp.HTTPResponse.StatusCode >= http.StatusBadRequest {
-		movie.State = MovieError
-		movie.Error = "The link failed with status " + fmt.Sprint(resp.HTTPResponse.StatusCode)
-		movie.Update(aa.db)
+		dbmovie.State = db.MovieError
+		dbmovie.Error = "The link failed with status " + fmt.Sprint(resp.HTTPResponse.StatusCode)
+		dbmovie.Update(aa.db)
 		return
 	}
 	t := time.NewTicker(500 * time.Millisecond)
@@ -44,8 +46,8 @@ Loop:
 	for {
 		select {
 		case <-t.C:
-			movie.Progress = 100 * resp.Progress()
-			movie.Update(aa.db)
+			dbmovie.Progress = 100 * resp.Progress()
+			dbmovie.Update(aa.db)
 
 		case <-resp.Done:
 			break Loop
@@ -54,48 +56,48 @@ Loop:
 
 	buf, err := ioutil.ReadFile(folder + "/" + uuid)
 	if err != nil {
-		movie.State = MovieError
-		movie.Error = "Can not read the file " + err.Error()
-		movie.Filetype = FiletypeOther
-		movie.Update(aa.db)
+		dbmovie.State = db.MovieError
+		dbmovie.Error = "Can not read the file " + err.Error()
+		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Update(aa.db)
 	}
 
 	kind, err := filetype.Match(buf)
 	if err != nil {
-		movie.State = MovieError
-		movie.Error = "The file is type of unknown " + err.Error()
-		movie.Filetype = FiletypeOther
-		movie.Update(aa.db)
+		dbmovie.State = db.MovieError
+		dbmovie.Error = "The file is type of unknown " + err.Error()
+		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Update(aa.db)
 		return
 	}
 
 	log.Printf("Info: File type: %s. MIME: %s\n", kind.Extension, kind.MIME.Value)
 	if kind.Extension != "mp4" && kind.Extension != "webm" {
-		movie.State = MovieError
-		movie.Error = "The file is type is different than mp4 and webm "
-		movie.Filetype = FiletypeOther
-		movie.Update(aa.db)
+		dbmovie.State = db.MovieError
+		dbmovie.Error = "The file is type is different than mp4 and webm "
+		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Update(aa.db)
 		return
 	}
 
 	if kind.Extension == "mp4" {
-		movie.Filetype = FiletypeMp4
+		dbmovie.Filetype = db.FiletypeMp4
 	}
 
 	if kind.Extension == "webm" {
-		movie.Filetype = FiletypeWebm
+		dbmovie.Filetype = db.FiletypeWebm
 	}
 
-	movie.Progress = 100
+	dbmovie.Progress = 100
 	if err := resp.Err(); err != nil {
-		movie.State = MovieError
-		movie.Error = "The link failed with error " + err.Error()
-		movie.Update(aa.db)
+		dbmovie.State = db.MovieError
+		dbmovie.Error = "The link failed with error " + err.Error()
+		dbmovie.Update(aa.db)
 		return
 	}
-	movie.State = MovieFinished
+	dbmovie.State = db.MovieFinished
 
-	movie.Update(aa.db)
+	dbmovie.Update(aa.db)
 
 	log.Printf("Info: Download saved to %v \n", resp.Filename)
 }
@@ -106,14 +108,15 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 		c.Bind(&input)
 		al := AdminLogic{}
 
-		createDbEntry := func(url string) (string, error) {
+		createDbEntry := func(url, name string) (string, error) {
 			id := uuid.NewV4()
-			movie := &DbMovie{}
-			movie.Id = id.String()
+			movie := &db.DbMovie{}
+			movie.Uuid = id.String()
+			movie.Name = name
 			movie.Link = url
-			movie.State = MovieDownloading
+			movie.State = db.MovieDownloading
 			err := movie.Create(aa.db)
-			return movie.Id, err
+			return movie.Uuid, err
 		}
 		startDownload := func(url, id string) {
 			go aa.startDownloadAndUpdateDB(config.Folder, url, id)
@@ -125,30 +128,79 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 		return c.JSON(http.StatusOK, output)
 	}
 }
-
-func (aa *adminApi) GeMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) serializeMovie(dm db.DbMovie) MovieOutput {
+	gmo := MovieOutput{}
+	gmo.ID = dm.Uuid
+	gmo.Name = dm.Name
+	gmo.CreatedAt = dm.CreatedAt
+	gmo.Progress = dm.Progress
+	gmo.State = string(dm.State)
+	gmo.Filetype = string(dm.Filetype)
+	gmo.Error = dm.Error
+	return gmo
+}
+func (aa *adminApi) GetMovie(config conf.Configuration) func(c echo.Context) error {
 	return func(c echo.Context) error {
-		id := c.Param("id")
-		log.Println("ID get movie " + id)
-		getMovieDb := func(id string) (*GetMovieOutput, error) {
-			dm := &DbMovie{}
-			err := aa.db.Model(&DbMovie{}).Where("id = ?", id).Find(&dm).Error
+		uuid := c.Param("id")
+		log.Println("ID get movie " + uuid)
+		getMovieDb := func(uuid string) (*MovieOutput, error) {
+			dm, err := db.GetMovieByUuid(aa.db, uuid)
 			if err != nil {
 				return nil, err
 			}
-			gmo := &GetMovieOutput{}
-			gmo.ID = dm.Id
-			gmo.Progress = dm.Progress
-			gmo.State = string(dm.State)
-			gmo.Filetype = string(dm.Filetype)
-			gmo.Error = dm.Error
-			return gmo, nil
+			m := aa.serializeMovie(*dm)
+			return &m, nil
 		}
 		al := AdminLogic{}
-		gmo, errMsg := al.GetMovie(id, getMovieDb)
+		gmo, errMsg := al.GetMovie(uuid, getMovieDb)
 		if errMsg != nil {
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
 		return c.JSON(http.StatusOK, gmo)
+	}
+}
+
+func (aa *adminApi) GetMovies(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		al := AdminLogic{}
+		pagination := Pagination{}
+		c.Bind(&pagination)
+		getMoviesDb := func(pagination Pagination) []MovieOutput {
+			dbms, _ := db.GetMoviesByPage(aa.db, pagination.Limit, pagination.LastSeenDate)
+			movies := []MovieOutput{}
+			for _, v := range dbms {
+				movies = append(movies, aa.serializeMovie(v))
+			}
+			return movies
+		}
+		movies, errMsg := al.GetMovies(pagination, getMoviesDb)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+
+		return c.JSON(http.StatusOK, movies)
+	}
+}
+
+func (aa *adminApi) DeleteMovie(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		uuid := c.Param("id")
+		movieExists := func(id string) bool {
+			_, err := db.GetMovieByUuid(aa.db, id)
+			return err == nil
+		}
+		deleteMovie := func(id string) error {
+			dbm, err := db.GetMovieByUuid(aa.db, id)
+			if err != nil {
+				return err
+			}
+			return dbm.Delete(aa.db)
+		}
+		al := AdminLogic{}
+		errMsg := al.DeleteMovie(uuid, movieExists, deleteMovie)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+		return c.JSON(http.StatusNoContent, "")
 	}
 }

@@ -1,20 +1,11 @@
-package admin
+package db
 
 import (
 	"database/sql/driver"
+	"time"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
-
-func NewDB(dbPath string) (*gorm.DB, error) {
-	db, err := gorm.Open("sqlite3", dbPath)
-	if err != nil {
-		return nil, err
-	}
-	db.AutoMigrate(&DbMovie{})
-	return db, nil
-}
 
 type MovieState string
 
@@ -61,7 +52,9 @@ const (
 )
 
 type DbMovie struct {
-	Id       string
+	gorm.Model
+	Uuid     string
+	Name     string
 	Link     string
 	State    MovieState
 	Filetype MoveFiletype
@@ -79,4 +72,24 @@ func (dbm *DbMovie) Update(tx *gorm.DB) error {
 
 func (dbm *DbMovie) Delete(tx *gorm.DB) error {
 	return tx.Delete(&dbm).Error
+}
+
+func GetMovieByUuid(db *gorm.DB, uuid string) (*DbMovie, error) {
+	dm := &DbMovie{}
+	err := db.Model(&DbMovie{}).Where("uuid = ?", uuid).Find(&dm).Error
+	if err != nil {
+		return nil, err
+	}
+	return dm, nil
+}
+
+func GetMoviesByPage(db *gorm.DB, limit int, fromDateAt *time.Time) ([]DbMovie, error) {
+	movies := []DbMovie{}
+	var err error
+	if fromDateAt != nil {
+		err = db.Model(&DbMovie{}).Where("created_at < ? ", *fromDateAt).Order("created_at DESC").Limit(limit).Find(&movies).Error
+	} else {
+		err = db.Model(&DbMovie{}).Order("created_at DESC").Limit(limit).Find(&movies).Error
+	}
+	return movies, err
 }

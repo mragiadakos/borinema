@@ -15,7 +15,10 @@ func NewErrorMsg() *ErrorMsg {
 }
 
 func (e *ErrorMsg) HasErrors() bool {
-	return len(e.VariableErrors) > 0 || e.Error != nil
+	if e.VariableErrors != nil {
+		return len(e.VariableErrors) > 0 || e.Error != nil
+	}
+	return e.Error != nil
 }
 
 func (e *ErrorMsg) GetVariable(s string) error {
@@ -33,6 +36,8 @@ func (e *ErrorMsg) Json() map[string]interface{} {
 		errs[k] = v.Error()
 	}
 	m["variable_errors"] = errs
-	m["error"] = e.Error.Error()
+	if e.Error != nil {
+		m["error"] = e.Error.Error()
+	}
 	return m
 }
