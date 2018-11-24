@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/cavaliercoder/grab"
@@ -119,7 +120,7 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 			return movie.Uuid, err
 		}
 		startDownload := func(url, id string) {
-			go aa.startDownloadAndUpdateDB(config.Folder, url, id)
+			go aa.startDownloadAndUpdateDB(config.DownloadFolder, url, id)
 		}
 		output, errMsg := al.DownloadMovieFromLink(input, createDbEntry, startDownload)
 		if errMsg != nil {
@@ -185,22 +186,116 @@ func (aa *adminApi) GetMovies(config conf.Configuration) func(c echo.Context) er
 func (aa *adminApi) DeleteMovie(config conf.Configuration) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
-		movieExists := func(id string) bool {
-			_, err := db.GetMovieByUuid(aa.db, id)
-			return err == nil
-		}
-		deleteMovie := func(id string) error {
-			dbm, err := db.GetMovieByUuid(aa.db, id)
-			if err != nil {
-				return err
-			}
-			return dbm.Delete(aa.db)
-		}
 		al := AdminLogic{}
-		errMsg := al.DeleteMovie(uuid, movieExists, deleteMovie)
+		errMsg := al.DeleteMovie(uuid, aa.movieExists, aa.deleteMovie(config))
 		if errMsg != nil {
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
 		return c.JSON(http.StatusNoContent, "")
+	}
+}
+
+func (aa *adminApi) UpdateMovie(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		uuid := c.Param("id")
+		input := UpdateMovieInput{}
+		c.Bind(&input)
+		al := AdminLogic{}
+		errMsg := al.UpdateMovie(uuid, input, aa.movieExists, aa.updateMovie)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+		return c.JSON(http.StatusNoContent, "")
+	}
+}
+
+func (aa *adminApi) SelectMovie(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		uuid := c.Param("id")
+		al := AdminLogic{}
+
+		errMsg := al.SelectMovie(uuid, aa.movieExists, aa.selectMovie)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+		return c.JSON(http.StatusNoContent, "")
+	}
+}
+
+func (aa *adminApi) SelectedMovie(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		getSelectedMovieDb := func() (*MovieOutput, error) {
+			dm, err := db.GetMovieBySelected(aa.db)
+			if err != nil {
+				return nil, err
+			}
+			m := aa.serializeMovie(*dm)
+			return &m, nil
+		}
+		al := AdminLogic{}
+		gmo, errMsg := al.SelectedMovie(getSelectedMovieDb)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+		return c.JSON(http.StatusOK, gmo)
+	}
+}
+
+func (aa *adminApi) RemoveAnySelectedMovie(config conf.Configuration) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		removeSelectedMovieDb := func() error {
+			dm, err := db.GetMovieBySelected(aa.db)
+			if err != nil {
+				return err
+			}
+			dm.Selected = false
+			return dm.Update(aa.db)
+		}
+		al := AdminLogic{}
+		errMsg := al.RemoveAnySelectedMovie(removeSelectedMovieDb)
+		if errMsg != nil {
+			return c.JSON(errMsg.Status, errMsg.Json())
+		}
+		return c.JSON(http.StatusNoContent, "")
+	}
+}
+
+func (aa *adminApi) movieExists(id string) bool {
+	_, err := db.GetMovieByUuid(aa.db, id)
+	return err == nil
+}
+
+func (aa *adminApi) updateMovie(id, name string) error {
+	dbm, err := db.GetMovieByUuid(aa.db, id)
+	if err != nil {
+		return err
+	}
+	dbm.Name = name
+
+	return dbm.Update(aa.db)
+}
+
+func (aa *adminApi) selectMovie(id string) error {
+	dbms, _ := db.GetMoviesByPage(aa.db, -1, nil)
+	for _, v := range dbms {
+		v.Selected = false
+		v.Update(aa.db)
+	}
+	dbm, err := db.GetMovieByUuid(aa.db, id)
+	if err != nil {
+		return err
+	}
+	dbm.Selected = true
+	return dbm.Update(aa.db)
+}
+
+func (aa *adminApi) deleteMovie(config conf.Configuration) func(id string) error {
+	return func(id string) error {
+		dbm, err := db.GetMovieByUuid(aa.db, id)
+		if err != nil {
+			return err
+		}
+		os.Remove(config.DownloadFolder + "/" + id)
+		return dbm.Delete(aa.db)
 	}
 }

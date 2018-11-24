@@ -137,3 +137,47 @@ func (al AdminLogic) UpdateMovie(id string,
 	}
 	return nil
 }
+
+func (al AdminLogic) SelectMovie(
+	id string,
+	movieExist func(id string) bool,
+	selectMovie func(id string) error) *utils.ErrorMsg {
+	errMsg := utils.NewErrorMsg()
+	if !movieExist(id) {
+		errMsg.Error = ERR_MOVIE_NOT_FOUND
+		errMsg.Status = http.StatusNotFound
+		return errMsg
+	}
+
+	err := selectMovie(id)
+	if err != nil {
+		errMsg.Error = err
+		errMsg.Status = http.StatusInternalServerError
+		return errMsg
+	}
+	return nil
+}
+
+func (al AdminLogic) SelectedMovie(
+	selectedMovie func() (*MovieOutput, error)) (*MovieOutput, *utils.ErrorMsg) {
+	errMsg := &utils.ErrorMsg{}
+	gmo, err := selectedMovie()
+	if err != nil {
+		errMsg.Status = http.StatusNotFound
+		errMsg.Error = ERR_MOVIE_NOT_FOUND
+		return nil, errMsg
+	}
+	return gmo, nil
+}
+
+func (al AdminLogic) RemoveAnySelectedMovie(
+	removeSelection func() error) *utils.ErrorMsg {
+	errMsg := &utils.ErrorMsg{}
+	err := removeSelection()
+	if err != nil {
+		errMsg.Status = http.StatusNotFound
+		errMsg.Error = ERR_MOVIE_NOT_FOUND
+		return errMsg
+	}
+	return nil
+}

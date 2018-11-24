@@ -58,6 +58,7 @@ type DbMovie struct {
 	Link     string
 	State    MovieState
 	Filetype MoveFiletype
+	Selected bool
 	Error    string
 	Progress float64
 }
@@ -83,6 +84,15 @@ func GetMovieByUuid(db *gorm.DB, uuid string) (*DbMovie, error) {
 	return dm, nil
 }
 
+func GetMovieBySelected(db *gorm.DB) (*DbMovie, error) {
+	dm := &DbMovie{}
+	err := db.Model(&DbMovie{}).Where("selected = ?", true).Find(&dm).Error
+	if err != nil {
+		return nil, err
+	}
+	return dm, nil
+}
+
 func GetMoviesByPage(db *gorm.DB, limit int, fromDateAt *time.Time) ([]DbMovie, error) {
 	movies := []DbMovie{}
 	var err error
@@ -91,5 +101,11 @@ func GetMoviesByPage(db *gorm.DB, limit int, fromDateAt *time.Time) ([]DbMovie, 
 	} else {
 		err = db.Model(&DbMovie{}).Order("created_at DESC").Limit(limit).Find(&movies).Error
 	}
+	return movies, err
+}
+
+func GetMovies(db *gorm.DB) ([]DbMovie, error) {
+	movies := []DbMovie{}
+	err := db.Model(&DbMovie{}).Find(&movies).Error
 	return movies, err
 }

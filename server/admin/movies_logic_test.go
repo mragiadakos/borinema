@@ -112,3 +112,24 @@ func TestUpdateMovieFailureEmptyName(t *testing.T) {
 	errMsg := al.UpdateMovie("lalalla", input, movieExists, updateMovie)
 	assert.Equal(t, errMsg.VariableErrors["name"], ERR_NAME_IS_EMPTY)
 }
+
+func TestSelectMovieFailureNotFound(t *testing.T) {
+	al := AdminLogic{}
+	movieExists := func(id string) bool {
+		return false
+	}
+	selectMovie := func(id string) error {
+		return nil
+	}
+	errMsg := al.SelectMovie("lalalla", movieExists, selectMovie)
+	assert.Equal(t, errMsg.Error, ERR_MOVIE_NOT_FOUND)
+}
+
+func TestSelectedMovieFailure(t *testing.T) {
+	al := AdminLogic{}
+	getMovieDb := func() (*MovieOutput, error) {
+		return nil, errors.New("failed")
+	}
+	_, errMsg := al.SelectedMovie(getMovieDb)
+	assert.Equal(t, http.StatusNotFound, errMsg.Status)
+}

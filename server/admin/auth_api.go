@@ -19,6 +19,16 @@ func NewAdminApi(db *gorm.DB) *adminApi {
 	return aa
 }
 
+func (aa *adminApi) AuthorizeAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		if utils.IsAdmin(c) {
+			return next(c)
+		} else {
+			return c.JSON(http.StatusUnauthorized, "")
+		}
+	}
+}
+
 func (aa *adminApi) Login(config conf.Configuration) func(echo.Context) error {
 	return func(c echo.Context) error {
 		opts := AuthorizationAdminInput{}

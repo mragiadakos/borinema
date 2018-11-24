@@ -3,12 +3,12 @@ package conf
 import "github.com/pelletier/go-toml"
 
 type Configuration struct {
-	Port          string
-	AdminUsername string
-	AdminPassword string
-	JwtSecret     string
-	Folder        string
-	DatabaseFile  string
+	Port           string
+	AdminUsername  string
+	AdminPassword  string
+	JwtSecret      string
+	DownloadFolder string
+	DatabaseFile   string
 }
 
 func GetConfigurations(path string) (*Configuration, error) {
@@ -45,11 +45,11 @@ func GetConfigurations(path string) (*Configuration, error) {
 		newConf.JwtSecret = "secret"
 	}
 
-	folder, ok := conf.Get("folder").(string)
+	folder, ok := conf.Get("download_folder").(string)
 	if ok {
-		newConf.Folder = folder
+		newConf.DownloadFolder = folder
 	} else {
-		newConf.Folder = "downloads"
+		newConf.DownloadFolder = "downloads"
 	}
 
 	dbFile, ok := conf.Get("database_file").(string)
