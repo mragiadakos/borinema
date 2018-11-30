@@ -12,7 +12,6 @@ import (
 	"github.com/mragiadakos/borinema/server/utils"
 )
 
-
 func Run(config conf.Configuration) {
 	r := echo.New()
 	db, err := db.NewDB(config.DatabaseFile)
@@ -36,14 +35,14 @@ func Run(config conf.Configuration) {
 	adminGroup.Use(aa.AuthorizeAdminMiddleware)
 
 	adminGroup.GET("/isAdmin", aa.IsAdmin())
-	adminGroup.POST("/api/admin/movies/link", aa.DownloadMovieLink(config))
-	adminGroup.GET("/api/admin/movies/selected", aa.SelectedMovie(config))
-	adminGroup.DELETE("/api/admin/movies/selected", aa.RemoveAnySelectedMovie(config))
-	adminGroup.GET("/api/admin/movies/:id", aa.GetMovie(config))
-	adminGroup.PUT("/api/admin/movies/:id", aa.UpdateMovie(config))
-	adminGroup.DELETE("/api/admin/movies/:id", aa.DeleteMovie(config))
-	adminGroup.PUT("/api/admin/movies/:id/select", aa.SelectMovie(config))
-	adminGroup.PUT("/api/admin/movies", aa.GetMovies(config))
+	adminGroup.POST("/movies/link", aa.DownloadMovieLink(config))
+	adminGroup.GET("/movies/selected", aa.SelectedMovie(config))
+	adminGroup.DELETE("/movies/selected", aa.RemoveAnySelectedMovie(config))
+	adminGroup.GET("/movies/:id", aa.GetMovie(config))
+	adminGroup.PUT("/movies/:id", aa.UpdateMovie(config))
+	adminGroup.DELETE("/movies/:id", aa.DeleteMovie(config))
+	adminGroup.PUT("/movies/:id/select", aa.SelectMovie(config))
+	adminGroup.POST("/get/movies", aa.GetMovies(config))
 
 	r.GET("/admin", aa.AdminPage())
 	r.Static("/admin_panel", "admin_panel")

@@ -24,9 +24,9 @@ func (m *MovieState) Scan(value interface{}) error {
 }
 
 const (
-	MovieDownloading = MovieState("downloading")
-	MovieError       = MovieState("error")
-	MovieFinished    = MovieState("finished")
+	MOVIE_STATE_DOWNLOADING = MovieState("downloading")
+	MOVIE_STATE_ERROR       = MovieState("error")
+	MOVIE_STATE_FINISHED    = MovieState("finished")
 )
 
 type MoveFiletype string
@@ -46,29 +46,30 @@ func (n *MoveFiletype) Scan(value interface{}) error {
 }
 
 const (
-	FiletypeMp4   = MoveFiletype("mp4")
-	FiletypeWebm  = MoveFiletype("webm")
-	FiletypeOther = MoveFiletype("other")
+	FILE_TYPE_MP4   = MoveFiletype("mp4")
+	FILE_TYPE_WEBM  = MoveFiletype("webm")
+	FILE_TYPE_OTHER = MoveFiletype("other")
 )
 
 type DbMovie struct {
-	gorm.Model
-	Uuid     string
-	Name     string
-	Link     string
-	State    MovieState
-	Filetype MoveFiletype
-	Selected bool
-	Error    string
-	Progress float64
+	ID        string
+	Name      string
+	Link      string
+	State     MovieState
+	Filetype  MoveFiletype
+	Selected  bool
+	Error     string
+	Progress  float64
+	CreatedAt time.Time
 }
 
 func (dbm *DbMovie) Create(tx *gorm.DB) error {
+	dbm.CreatedAt = time.Now()
 	return tx.Create(&dbm).Error
 }
 
 func (dbm *DbMovie) Update(tx *gorm.DB) error {
-	return tx.Save(&dbm).Error
+	return tx.Model(&DbMovie{}).Save(dbm).Error
 }
 
 func (dbm *DbMovie) Delete(tx *gorm.DB) error {
@@ -77,7 +78,7 @@ func (dbm *DbMovie) Delete(tx *gorm.DB) error {
 
 func GetMovieByUuid(db *gorm.DB, uuid string) (*DbMovie, error) {
 	dm := &DbMovie{}
-	err := db.Model(&DbMovie{}).Where("uuid = ?", uuid).Find(&dm).Error
+	err := db.Model(&DbMovie{}).Where("id = ?", uuid).Find(&dm).Error
 	if err != nil {
 		return nil, err
 	}

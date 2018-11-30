@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"errors"
 	"net/http"
 	"regexp"
 	"time"
@@ -33,6 +34,11 @@ func (al AdminLogic) DownloadMovieFromLink(
 		errMsg.Status = http.StatusUnprocessableEntity
 	}
 	if errMsg.HasErrors() {
+		errStr := ""
+		for _, v := range errMsg.VariableErrors {
+			errStr += v.Error() + "\n"
+		}
+		errMsg.Error = errors.New(errStr)
 		return nil, errMsg
 	}
 

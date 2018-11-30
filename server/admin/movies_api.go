@@ -20,6 +20,9 @@ func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
 	dbmovie, err := db.GetMovieByUuid(aa.db, uuid)
 	if err != nil {
 		log.Println("Error:", err)
+		dbmovie.State = db.MOVIE_STATE_ERROR
+		dbmovie.Error = err.Error()
+		dbmovie.Update(aa.db)
 		return
 	}
 
@@ -27,16 +30,27 @@ func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
 	req, err := grab.NewRequest(folder+"/"+uuid, url)
 	if err != nil {
 		log.Println("Error:", err)
+		dbmovie.State = db.MOVIE_STATE_ERROR
+		dbmovie.Error = err.Error()
+		dbmovie.Update(aa.db)
 		return
 	}
 	log.Printf("Info: Downloading %v...\n", req.URL())
 	resp := client.Do(req)
+	if resp.Err() != nil {
+		dbmovie.State = db.MOVIE_STATE_ERROR
+		dbmovie.Error = resp.Err().Error()
+		log.Println("Error:", dbmovie.Error)
+		dbmovie.Update(aa.db)
+		return
+	}
 	log.Println(resp.HTTPResponse)
 	log.Printf("Info: http status  %v\n", resp.HTTPResponse.Status)
 
 	if resp.HTTPResponse.StatusCode >= http.StatusBadRequest {
-		dbmovie.State = db.MovieError
+		dbmovie.State = db.MOVIE_STATE_ERROR
 		dbmovie.Error = "The link failed with status " + fmt.Sprint(resp.HTTPResponse.StatusCode)
+		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
 		return
 	}
@@ -57,46 +71,51 @@ Loop:
 
 	buf, err := ioutil.ReadFile(folder + "/" + uuid)
 	if err != nil {
-		dbmovie.State = db.MovieError
+		dbmovie.State = db.MOVIE_STATE_ERROR
 		dbmovie.Error = "Can not read the file " + err.Error()
-		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Filetype = db.FILE_TYPE_OTHER
+		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
+		return
 	}
 
 	kind, err := filetype.Match(buf)
 	if err != nil {
-		dbmovie.State = db.MovieError
+		dbmovie.State = db.MOVIE_STATE_ERROR
 		dbmovie.Error = "The file is type of unknown " + err.Error()
-		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Filetype = db.FILE_TYPE_OTHER
+		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
 		return
 	}
 
 	log.Printf("Info: File type: %s. MIME: %s\n", kind.Extension, kind.MIME.Value)
 	if kind.Extension != "mp4" && kind.Extension != "webm" {
-		dbmovie.State = db.MovieError
+		dbmovie.State = db.MOVIE_STATE_ERROR
 		dbmovie.Error = "The file is type is different than mp4 and webm "
-		dbmovie.Filetype = db.FiletypeOther
+		dbmovie.Filetype = db.FILE_TYPE_OTHER
+		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
 		return
 	}
 
 	if kind.Extension == "mp4" {
-		dbmovie.Filetype = db.FiletypeMp4
+		dbmovie.Filetype = db.FILE_TYPE_MP4
 	}
 
 	if kind.Extension == "webm" {
-		dbmovie.Filetype = db.FiletypeWebm
+		dbmovie.Filetype = db.FILE_TYPE_WEBM
 	}
 
 	dbmovie.Progress = 100
 	if err := resp.Err(); err != nil {
-		dbmovie.State = db.MovieError
+		dbmovie.State = db.MOVIE_STATE_ERROR
 		dbmovie.Error = "The link failed with error " + err.Error()
+		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
 		return
 	}
-	dbmovie.State = db.MovieFinished
+	dbmovie.State = db.MOVIE_STATE_FINISHED
 
 	dbmovie.Update(aa.db)
 
@@ -112,12 +131,12 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 		createDbEntry := func(url, name string) (string, error) {
 			id := uuid.NewV4()
 			movie := &db.DbMovie{}
-			movie.Uuid = id.String()
+			movie.ID = id.String()
 			movie.Name = name
 			movie.Link = url
-			movie.State = db.MovieDownloading
+			movie.State = db.MOVIE_STATE_DOWNLOADING
 			err := movie.Create(aa.db)
-			return movie.Uuid, err
+			return movie.ID, err
 		}
 		startDownload := func(url, id string) {
 			go aa.startDownloadAndUpdateDB(config.DownloadFolder, url, id)
@@ -131,7 +150,7 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 }
 func (aa *adminApi) serializeMovie(dm db.DbMovie) MovieOutput {
 	gmo := MovieOutput{}
-	gmo.ID = dm.Uuid
+	gmo.ID = dm.ID
 	gmo.Name = dm.Name
 	gmo.CreatedAt = dm.CreatedAt
 	gmo.Progress = dm.Progress

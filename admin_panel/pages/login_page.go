@@ -1,9 +1,12 @@
-package main
+package pages
 
 import (
 	"github.com/gopherjs/vecty"
 	h "github.com/gopherjs/vecty/elem"
 	"github.com/gopherjs/vecty/event"
+	"github.com/mragiadakos/borinema/admin_panel/actions"
+	"github.com/mragiadakos/borinema/admin_panel/services"
+	"github.com/mragiadakos/borinema/admin_panel/store"
 )
 
 type LoginPage struct {
@@ -15,33 +18,37 @@ type LoginPage struct {
 
 func (lp *LoginPage) onPassword(event *vecty.Event) {
 	lp.password = event.Target.Get("value").String()
-	println(lp.password)
-	vecty.Rerender(lp)
 }
 
 func (lp *LoginPage) onUsername(event *vecty.Event) {
 	lp.username = event.Target.Get("value").String()
-	println(lp.username)
-	vecty.Rerender(lp)
 }
 
 func (lp *LoginPage) onSubmit(event *vecty.Event) {
 	go func() {
-		authJson := AuthorizationJson{
+		authJson := services.AuthorizationJson{
 			Username: lp.username,
 			Password: lp.password,
 		}
-		as := AuthService{}
-		token, errMsg := as.postLogin(authJson)
+		println(authJson.Username, authJson.Password)
+		as := services.AuthService{}
+		token, errMsg := as.PostLogin(authJson)
 		if errMsg != nil {
 			lp.errStr = errMsg.Error
+			vecty.Rerender(lp)
+			return
 		} else {
 			lp.password = ""
 			lp.username = ""
 			lp.errStr = ""
 		}
-		vecty.Rerender(lp)
-		as.saveToken(token)
+		as.SaveToken(token)
+		store.Dispatch(&actions.SetIsAdmin{
+			IsAdmin: true,
+		})
+		store.Dispatch(&actions.ToRedirect{
+			ToRedirect: actions.PAGE_ADMIN_MAIN,
+		})
 	}()
 }
 
