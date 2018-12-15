@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	configuration, err := conf.GetConfigurations("conf.toml")
 	if err != nil {
 		log.Fatal(err)

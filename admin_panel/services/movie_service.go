@@ -2,7 +2,7 @@ package services
 
 import (
 	"encoding/json"
-	"time"
+	"strconv"
 
 	"honnef.co/go/js/xhr"
 )
@@ -47,23 +47,27 @@ func (ms MovieService) AddMovie(amj AddMovieJson) (*MovieIdJson, *ErrorMsg) {
 }
 
 type PaginationJson struct {
-	LastSeenDate *time.Time `json:"last_seen_date"`
-	Limit        int        `json:"limit"` // -1 means all
+	LastSeenDate *int64 `json:"last_seen_date"`
+	Limit        int    `json:"limit"` // -1 means all
 }
 type MovieJson struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Progress  float64   `json:"progress"`
-	State     string    `json:"state"`
-	Filetype  string    `json:"filetype"`
-	CreatedAt time.Time `json:"created_at"`
-	Error     string    `json:"error"`
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Progress  float64 `json:"progress"`
+	State     string  `json:"state"`
+	Filetype  string  `json:"filetype"`
+	CreatedAt int64   `json:"created_at"`
 }
 
 func (ms MovieService) GetMovies(pag PaginationJson) ([]MovieJson, *ErrorMsg) {
 	as := AuthService{}
+	link := "/api/admin/movies?limit=" + strconv.Itoa(pag.Limit)
 	token := as.GetToken()
-	req := xhr.NewRequest("POST", "/api/admin/get/movies")
+	if pag.LastSeenDate != nil {
+		link += "&last_seen_date=" + strconv.FormatInt(*pag.LastSeenDate, 10)
+	}
+	println(link)
+	req := xhr.NewRequest("GET", link)
 	req.SetRequestHeader("Content-Type", "application/json")
 	req.SetRequestHeader("Authorization", "Bearer "+token)
 	b, _ := json.Marshal(pag)

@@ -36,23 +36,24 @@ func TestDownloadMovieLinkApiSuccess(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	aa := NewAdminApi(dbtx)
-	aa.DownloadMovieLink(config)(c)
+	fakeWs := func(a string, c float64) {}
+	aa.DownloadMovieLink(config, fakeWs)(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
 
 	// check if the movie exists in the DB
 	movie := db.DbMovie{}
 	dbtx.Model(&db.DbMovie{}).Last(&movie)
 	assert.Equal(t, input.Url, movie.Link)
-	assert.Equal(t, db.MovieDownloading, movie.State)
+	assert.Equal(t, db.MOVIE_STATE_DOWNLOADING, movie.State)
 	assert.Equal(t, input.Name, movie.Name)
 
 	time.Sleep(time.Second * 20)
 	dbtx.Model(&db.DbMovie{}).Last(&movie)
-	assert.Equal(t, db.MovieFinished, movie.State)
-	assert.Equal(t, db.FiletypeMp4, movie.Filetype)
+	assert.Equal(t, db.MOVIE_STATE_FINISHED, movie.State)
+	assert.Equal(t, db.FILE_TYPE_MP4, movie.Filetype)
 
 	// check if the movie exists in the folder
-	_, err = os.Stat(config.DownloadFolder + "/" + movie.Uuid)
+	_, err = os.Stat(config.DownloadFolder + "/" + movie.ID)
 	assert.Nil(t, err)
 }
 
@@ -77,7 +78,8 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	aa := NewAdminApi(dbtx)
-	aa.DownloadMovieLink(config)(c)
+	fakeWs := func(a string, c float64) {}
+	aa.DownloadMovieLink(config, fakeWs)(c)
 	output := MovieFromLinkOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &output)
 
@@ -93,7 +95,7 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	mout := &MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mout)
 	assert.Equal(t, output.ID, mout.ID)
-	assert.Equal(t, string(db.MovieDownloading), mout.State)
+	assert.Equal(t, string(db.MOVIE_STATE_DOWNLOADING), mout.State)
 
 	time.Sleep(20 * time.Second)
 
@@ -110,8 +112,8 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	json.Unmarshal(rec.Body.Bytes(), &mout)
 	assert.Equal(t, output.ID, mout.ID)
 	assert.Equal(t, input.Name, mout.Name)
-	assert.Equal(t, string(db.MovieFinished), mout.State)
-	assert.Equal(t, string(db.FiletypeMp4), mout.Filetype)
+	assert.Equal(t, string(db.MOVIE_STATE_FINISHED), mout.State)
+	assert.Equal(t, string(db.FILE_TYPE_MP4), mout.Filetype)
 }
 
 func TestGetMoviesSuccess(t *testing.T) {
@@ -146,8 +148,8 @@ func TestGetMoviesSuccess(t *testing.T) {
 	mouts := []MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mouts)
 	assert.Equal(t, 2, len(mouts))
-	assert.Equal(t, ms[9].Uuid, mouts[0].ID)
-	assert.Equal(t, ms[8].Uuid, mouts[1].ID)
+	assert.Equal(t, ms[9].ID, mouts[0].ID)
+	assert.Equal(t, ms[8].ID, mouts[1].ID)
 
 	input = Pagination{
 		LastSeenDate: &ms[7].CreatedAt,
@@ -162,8 +164,8 @@ func TestGetMoviesSuccess(t *testing.T) {
 	mouts = []MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mouts)
 	assert.Equal(t, 2, len(mouts))
-	assert.Equal(t, ms[9].Uuid, mouts[0].ID)
-	assert.Equal(t, ms[8].Uuid, mouts[1].ID)
+	assert.Equal(t, ms[9].ID, mouts[0].ID)
+	assert.Equal(t, ms[8].ID, mouts[1].ID)
 
 }
 
@@ -193,7 +195,7 @@ func TestDeleteMovieSuccess(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/api/admin/movies/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(v.Uuid)
+		c.SetParamValues(v.ID)
 		aa.DeleteMovie(config)(c)
 		assert.Equal(t, http.StatusNoContent, rec.Code)
 	}
@@ -222,9 +224,9 @@ func TestUpdateMovieSuccess(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-
+	fakeWs := func(a string, c float64) {}
 	aa := NewAdminApi(dbtx)
-	aa.DownloadMovieLink(config)(c)
+	aa.DownloadMovieLink(config, fakeWs)(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
 	output := MovieFromLinkOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &output)
@@ -270,8 +272,8 @@ func TestSelectMovieSuccess(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-
-		aa.DownloadMovieLink(config)(c)
+		fakeWs := func(a string, c float64) {}
+		aa.DownloadMovieLink(config, fakeWs)(c)
 		assert.Equal(t, http.StatusOK, rec.Code)
 		output := MovieFromLinkOutput{}
 		json.Unmarshal(rec.Body.Bytes(), &output)

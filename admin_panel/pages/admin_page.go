@@ -19,10 +19,15 @@ func (mp *AdminPage) Render() vecty.ComponentOrHTML {
 			),
 			h.Break(),
 			h.Div(
-				&components.FormMovieComponent{},
+				vecty.Markup(vecty.Class("columns")),
+				h.Div(
+					vecty.Markup(vecty.Class("column"), vecty.Class("is-two-thirds")),
+					&components.MoviesComponent{Movies: store.Movies}),
+
+				h.Div(
+					vecty.Markup(vecty.Class("column")),
+					&components.FormMovieComponent{}),
 			),
-			h.Break(),
-			h.Div(&components.MoviesComponent{Movies: store.Movies}),
 		),
 	)
 }

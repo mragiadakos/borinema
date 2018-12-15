@@ -30,19 +30,19 @@ func (fmc *FormMovieComponent) onSubmit(event *vecty.Event) {
 		amj := services.AddMovieJson{}
 		amj.Name = fmc.name
 		amj.Url = fmc.link
-		_, errMsg := ms.AddMovie(amj)
+		movieId, errMsg := ms.AddMovie(amj)
 		if errMsg != nil {
 			fmc.errStr = errMsg.Error
 			vecty.Rerender(fmc)
 			return
 		}
 		go func() {
-			pag := services.PaginationJson{}
-			pag.Limit = -1
-			mvs, _ := ms.GetMovies(pag)
-			store.Dispatch(&actions.SetMovies{
-				Movies: mvs,
-			})
+			mv, err := ms.GetMovie(movieId.ID)
+			if err == nil {
+				store.Dispatch(&actions.SetFirstMovieInList{
+					Movie: *mv,
+				})
+			}
 		}()
 	}()
 }

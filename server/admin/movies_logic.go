@@ -55,13 +55,12 @@ func (al AdminLogic) DownloadMovieFromLink(
 }
 
 type MovieOutput struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Progress  float64   `json:"progress"`
-	State     string    `json:"state"`
-	Filetype  string    `json:"filetype"`
-	CreatedAt time.Time `json:"created_at"`
-	Error     string    `json:"error"`
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Progress  float64 `json:"progress"`
+	State     string  `json:"state"`
+	Filetype  string  `json:"filetype"`
+	CreatedAt int64   `json:"created_at"`
 }
 
 func (al AdminLogic) GetMovie(id string,

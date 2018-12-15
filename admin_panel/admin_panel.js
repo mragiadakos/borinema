@@ -31309,6 +31309,152 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/cathalgarvey/fmtles
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/websocket/websocketjs"] = (function() {
+	var $pkg = {}, $init, js, ReadyState, WebSocket, ptrType, ptrType$1, ptrType$2, funcType, New;
+	js = $packages["github.com/gopherjs/gopherjs/js"];
+	ReadyState = $pkg.ReadyState = $newType(2, $kindUint16, "websocketjs.ReadyState", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/websocket/websocketjs", true, null);
+	WebSocket = $pkg.WebSocket = $newType(0, $kindStruct, "websocketjs.WebSocket", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/websocket/websocketjs", true, function(Object_, URL_, ReadyState_, BufferedAmount_, Extensions_, Protocol_, BinaryType_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Object = null;
+			this.URL = "";
+			this.ReadyState = 0;
+			this.BufferedAmount = 0;
+			this.Extensions = "";
+			this.Protocol = "";
+			this.BinaryType = "";
+			return;
+		}
+		this.Object = Object_;
+		this.URL = URL_;
+		this.ReadyState = ReadyState_;
+		this.BufferedAmount = BufferedAmount_;
+		this.Extensions = Extensions_;
+		this.Protocol = Protocol_;
+		this.BinaryType = BinaryType_;
+	});
+	ptrType = $ptrType(WebSocket);
+	ptrType$1 = $ptrType(js.Error);
+	ptrType$2 = $ptrType(js.Object);
+	funcType = $funcType([ptrType$2], [], false);
+	ReadyState.prototype.String = function() {
+		var _1, rs;
+		rs = this.$val;
+		_1 = rs;
+		if (_1 === (0)) {
+			return "Connecting";
+		} else if (_1 === (1)) {
+			return "Open";
+		} else if (_1 === (2)) {
+			return "Closing";
+		} else if (_1 === (3)) {
+			return "Closed";
+		} else {
+			return "Unknown";
+		}
+	};
+	$ptrType(ReadyState).prototype.String = function() { return new ReadyState(this.$get()).String(); };
+	New = function(url) {
+		var err, object, url, ws, $deferred;
+		/* */ var $err = null; try { $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		ws = ptrType.nil;
+		err = $ifaceNil;
+		$deferred.push([(function() {
+			var _tuple, e, jsErr, ok;
+			e = $recover();
+			if ($interfaceIsEqual(e, $ifaceNil)) {
+				return;
+			}
+			_tuple = $assertType(e, ptrType$1, true);
+			jsErr = _tuple[0];
+			ok = _tuple[1];
+			if (ok && !(jsErr === ptrType$1.nil)) {
+				ws = ptrType.nil;
+				err = jsErr;
+			} else {
+				$panic(e);
+			}
+		}), []]);
+		object = new ($global.WebSocket)($externalize(url, $String));
+		ws = new WebSocket.ptr(object, "", 0, 0, "", "", "");
+		return [ws, err];
+		/* */ } catch(err) { $err = err; } finally { $callDeferred($deferred, $err); if (!$curGoroutine.asleep) { return  [ws, err]; } }
+	};
+	$pkg.New = New;
+	WebSocket.ptr.prototype.AddEventListener = function(typ, useCapture, listener) {
+		var listener, typ, useCapture, ws;
+		ws = this;
+		ws.Object.addEventListener($externalize(typ, $String), $externalize(listener, funcType), $externalize(useCapture, $Bool));
+	};
+	WebSocket.prototype.AddEventListener = function(typ, useCapture, listener) { return this.$val.AddEventListener(typ, useCapture, listener); };
+	WebSocket.ptr.prototype.RemoveEventListener = function(typ, useCapture, listener) {
+		var listener, typ, useCapture, ws;
+		ws = this;
+		ws.Object.removeEventListener($externalize(typ, $String), $externalize(listener, funcType), $externalize(useCapture, $Bool));
+	};
+	WebSocket.prototype.RemoveEventListener = function(typ, useCapture, listener) { return this.$val.RemoveEventListener(typ, useCapture, listener); };
+	WebSocket.ptr.prototype.Send = function(data) {
+		var data, err, ws, $deferred;
+		/* */ var $err = null; try { $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		err = $ifaceNil;
+		ws = this;
+		$deferred.push([(function() {
+			var _tuple, e, jsErr, ok;
+			e = $recover();
+			if ($interfaceIsEqual(e, $ifaceNil)) {
+				return;
+			}
+			_tuple = $assertType(e, ptrType$1, true);
+			jsErr = _tuple[0];
+			ok = _tuple[1];
+			if (ok && !(jsErr === ptrType$1.nil)) {
+				err = jsErr;
+			} else {
+				$panic(e);
+			}
+		}), []]);
+		ws.Object.send($externalize(data, $emptyInterface));
+		return err;
+		/* */ } catch(err) { $err = err; } finally { $callDeferred($deferred, $err); if (!$curGoroutine.asleep) { return  err; } }
+	};
+	WebSocket.prototype.Send = function(data) { return this.$val.Send(data); };
+	WebSocket.ptr.prototype.Close = function() {
+		var err, ws, $deferred;
+		/* */ var $err = null; try { $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		err = $ifaceNil;
+		ws = this;
+		$deferred.push([(function() {
+			var _tuple, e, jsErr, ok;
+			e = $recover();
+			if ($interfaceIsEqual(e, $ifaceNil)) {
+				return;
+			}
+			_tuple = $assertType(e, ptrType$1, true);
+			jsErr = _tuple[0];
+			ok = _tuple[1];
+			if (ok && !(jsErr === ptrType$1.nil)) {
+				err = jsErr;
+			} else {
+				$panic(e);
+			}
+		}), []]);
+		ws.Object.close(1000);
+		return err;
+		/* */ } catch(err) { $err = err; } finally { $callDeferred($deferred, $err); if (!$curGoroutine.asleep) { return  err; } }
+	};
+	WebSocket.prototype.Close = function() { return this.$val.Close(); };
+	ReadyState.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType.methods = [{prop: "AddEventListener", name: "AddEventListener", pkg: "", typ: $funcType([$String, $Bool, funcType], [], false)}, {prop: "RemoveEventListener", name: "RemoveEventListener", pkg: "", typ: $funcType([$String, $Bool, funcType], [], false)}, {prop: "Send", name: "Send", pkg: "", typ: $funcType([$emptyInterface], [$error], false)}, {prop: "Close", name: "Close", pkg: "", typ: $funcType([], [$error], false)}];
+	WebSocket.init("", [{prop: "Object", name: "Object", embedded: true, exported: true, typ: ptrType$2, tag: ""}, {prop: "URL", name: "URL", embedded: false, exported: true, typ: $String, tag: "js:\"url\""}, {prop: "ReadyState", name: "ReadyState", embedded: false, exported: true, typ: ReadyState, tag: "js:\"readyState\""}, {prop: "BufferedAmount", name: "BufferedAmount", embedded: false, exported: true, typ: $Uint32, tag: "js:\"bufferedAmount\""}, {prop: "Extensions", name: "Extensions", embedded: false, exported: true, typ: $String, tag: "js:\"extensions\""}, {prop: "Protocol", name: "Protocol", embedded: false, exported: true, typ: $String, tag: "js:\"protocol\""}, {prop: "BinaryType", name: "BinaryType", embedded: false, exported: true, typ: $String, tag: "js:\"binaryType\""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = js.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["github.com/mragiadakos/borinema/vendor/github.com/oskca/gopherjs-localStorage"] = (function() {
 	var $pkg = {}, $init, js, localStorage, SetItem, GetItem;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
@@ -31543,12 +31689,15 @@ $packages["github.com/mragiadakos/borinema/vendor/honnef.co/go/js/xhr"] = (funct
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() {
-	var $pkg = {}, $init, json$1, json, localStorage, xhr, time, ErrorMsg, AuthorizationJson, TokenJson, AuthService, MovieService, AddMovieJson, MovieIdJson, PaginationJson, MovieJson, mapType, ptrType, sliceType, ptrType$1, structType, ptrType$2, sliceType$1, ptrType$3, ptrType$4, ptrType$5, ptrType$6, mapType$1, ptrType$7, IsErrorMsg;
+	var $pkg = {}, $init, json$1, errors, js, json, websocketjs, localStorage, xhr, strconv, ErrorMsg, AuthorizationJson, TokenJson, AuthService, MovieService, AddMovieJson, MovieIdJson, PaginationJson, MovieJson, WsService, WsData, WsProgressMovieJson, mapType, ptrType, sliceType, ptrType$1, structType, ptrType$2, ptrType$3, sliceType$1, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, mapType$1, ptrType$10, funcType, IsErrorMsg, NewWsService;
 	json$1 = $packages["encoding/json"];
+	errors = $packages["errors"];
+	js = $packages["github.com/gopherjs/gopherjs/js"];
 	json = $packages["github.com/mragiadakos/borinema/vendor/github.com/cathalgarvey/fmtless/encoding/json"];
+	websocketjs = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/websocket/websocketjs"];
 	localStorage = $packages["github.com/mragiadakos/borinema/vendor/github.com/oskca/gopherjs-localStorage"];
 	xhr = $packages["github.com/mragiadakos/borinema/vendor/honnef.co/go/js/xhr"];
-	time = $packages["time"];
+	strconv = $packages["strconv"];
 	ErrorMsg = $pkg.ErrorMsg = $newType(0, $kindStruct, "services.ErrorMsg", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(VariableErrors_, Error_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -31610,14 +31759,14 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	PaginationJson = $pkg.PaginationJson = $newType(0, $kindStruct, "services.PaginationJson", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(LastSeenDate_, Limit_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.LastSeenDate = ptrType$7.nil;
+			this.LastSeenDate = ptrType$3.nil;
 			this.Limit = 0;
 			return;
 		}
 		this.LastSeenDate = LastSeenDate_;
 		this.Limit = Limit_;
 	});
-	MovieJson = $pkg.MovieJson = $newType(0, $kindStruct, "services.MovieJson", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(ID_, Name_, Progress_, State_, Filetype_, CreatedAt_, Error_) {
+	MovieJson = $pkg.MovieJson = $newType(0, $kindStruct, "services.MovieJson", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(ID_, Name_, Progress_, State_, Filetype_, CreatedAt_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.ID = "";
@@ -31625,8 +31774,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 			this.Progress = 0;
 			this.State = "";
 			this.Filetype = "";
-			this.CreatedAt = new time.Time.ptr(new $Uint64(0, 0), new $Int64(0, 0), ptrType$3.nil);
-			this.Error = "";
+			this.CreatedAt = new $Int64(0, 0);
 			return;
 		}
 		this.ID = ID_;
@@ -31635,7 +31783,38 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		this.State = State_;
 		this.Filetype = Filetype_;
 		this.CreatedAt = CreatedAt_;
-		this.Error = Error_;
+	});
+	WsService = $pkg.WsService = $newType(0, $kindStruct, "services.WsService", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(ws_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.ws = ptrType$7.nil;
+			return;
+		}
+		this.ws = ws_;
+	});
+	WsData = $pkg.WsData = $newType(0, $kindStruct, "services.WsData", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(Theme_, Data_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Theme = "";
+			this.Data = $ifaceNil;
+			return;
+		}
+		this.Theme = Theme_;
+		this.Data = Data_;
+	});
+	WsProgressMovieJson = $pkg.WsProgressMovieJson = $newType(0, $kindStruct, "services.WsProgressMovieJson", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(Id_, State_, Progress_, Filetype_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Id = "";
+			this.State = "";
+			this.Progress = 0;
+			this.Filetype = "";
+			return;
+		}
+		this.Id = Id_;
+		this.State = State_;
+		this.Progress = Progress_;
+		this.Filetype = Filetype_;
 	});
 	mapType = $mapType($String, $emptyInterface);
 	ptrType = $ptrType(mapType);
@@ -31643,13 +31822,17 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	ptrType$1 = $ptrType(ErrorMsg);
 	structType = $structType("", [{prop: "IsAdmin", name: "IsAdmin", embedded: false, exported: true, typ: $Bool, tag: "json:\"is_admin\""}]);
 	ptrType$2 = $ptrType(MovieIdJson);
+	ptrType$3 = $ptrType($Int64);
 	sliceType$1 = $sliceType(MovieJson);
-	ptrType$3 = $ptrType(time.Location);
 	ptrType$4 = $ptrType(sliceType$1);
 	ptrType$5 = $ptrType(MovieJson);
 	ptrType$6 = $ptrType(ptrType$5);
+	ptrType$7 = $ptrType(websocketjs.WebSocket);
+	ptrType$8 = $ptrType(WsService);
+	ptrType$9 = $ptrType(WsProgressMovieJson);
 	mapType$1 = $mapType($String, $String);
-	ptrType$7 = $ptrType(time.Time);
+	ptrType$10 = $ptrType(js.Object);
+	funcType = $funcType([ptrType$10], [], false);
 	IsErrorMsg = function(b) {
 		var _entry, _entry$1, _r, _tuple, _tuple$1, b, ok, ok2, tmp, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; b = $f.b; ok = $f.ok; ok2 = $f.ok2; tmp = $f.tmp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31821,14 +32004,19 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	};
 	MovieService.prototype.AddMovie = function(amj) { return this.$val.AddMovie(amj); };
 	MovieService.ptr.prototype.GetMovies = function(pag) {
-		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple, as, b, data, err, errMsg, mjs, ms, pag, req, token, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple = $f._tuple; as = $f.as; b = $f.b; data = $f.data; err = $f.err; errMsg = $f.errMsg; mjs = $f.mjs; ms = $f.ms; pag = $f.pag; req = $f.req; token = $f.token; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple, as, b, data, err, errMsg, link, mjs, ms, pag, req, token, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple = $f._tuple; as = $f.as; b = $f.b; data = $f.data; err = $f.err; errMsg = $f.errMsg; link = $f.link; mjs = $f.mjs; ms = $f.ms; pag = $f.pag; req = $f.req; token = $f.token; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		errMsg = [errMsg];
 		mjs = [mjs];
 		ms = this;
 		as = new AuthService.ptr();
+		link = "/api/admin/movies?limit=" + strconv.Itoa(pag.Limit);
 		token = $clone(as, AuthService).GetToken();
-		req = xhr.NewRequest("POST", "/api/admin/get/movies");
+		if (!(pag.LastSeenDate === ptrType$3.nil)) {
+			link = link + ("&last_seen_date=" + strconv.FormatInt(pag.LastSeenDate.$get(), 10));
+		}
+		console.log(link);
+		req = xhr.NewRequest("GET", link);
 		req.SetRequestHeader("Content-Type", "application/json");
 		req.SetRequestHeader("Authorization", "Bearer " + token);
 		_r = json$1.Marshal(new pag.constructor.elem(pag)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
@@ -31868,7 +32056,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 			$s = -1; return [sliceType$1.nil, new ErrorMsg.ptr(false, _r$7)];
 		/* } */ case 15:
 		$s = -1; return [mjs[0], ptrType$1.nil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MovieService.ptr.prototype.GetMovies }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple = _tuple; $f.as = as; $f.b = b; $f.data = data; $f.err = err; $f.errMsg = errMsg; $f.mjs = mjs; $f.ms = ms; $f.pag = pag; $f.req = req; $f.token = token; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MovieService.ptr.prototype.GetMovies }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple = _tuple; $f.as = as; $f.b = b; $f.data = data; $f.err = err; $f.errMsg = errMsg; $f.link = link; $f.mjs = mjs; $f.ms = ms; $f.pag = pag; $f.req = req; $f.token = token; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MovieService.prototype.GetMovies = function(pag) { return this.$val.GetMovies(pag); };
 	MovieService.ptr.prototype.GetMovie = function(id) {
@@ -31906,7 +32094,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 			/* } */ case 10:
 			$s = -1; return [ptrType$5.nil, errMsg[0]];
 		/* } */ case 6:
-		mj[0] = new MovieJson.ptr("", "", 0, "", "", new time.Time.ptr(new $Uint64(0, 0), new $Int64(0, 0), ptrType$3.nil), "");
+		mj[0] = new MovieJson.ptr("", "", 0, "", "", new $Int64(0, 0));
 		_r$5 = json$1.Unmarshal(data, (mj.$ptr || (mj.$ptr = new ptrType$6(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, mj)))); /* */ $s = 12; case 12: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 		err = _r$5;
 		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 13; continue; }
@@ -32033,8 +32221,77 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		/* */ } return; } if ($f === undefined) { $f = { $blk: MovieService.ptr.prototype.SelectMovie }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.as = as; $f.data = data; $f.err = err; $f.errMsg = errMsg; $f.id = id; $f.ms = ms; $f.req = req; $f.token = token; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MovieService.prototype.SelectMovie = function(id) { return this.$val.SelectMovie(id); };
+	NewWsService = function(token) {
+		var _tuple, err, token, ws, wss;
+		wss = new WsService.ptr(ptrType$7.nil);
+		_tuple = websocketjs.New("ws://localhost:8080/api/admin/ws?token=" + token);
+		ws = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			return [ptrType$8.nil, err];
+		}
+		wss.ws = ws;
+		return [wss, $ifaceNil];
+	};
+	$pkg.NewWsService = NewWsService;
+	WsService.ptr.prototype.SerializeProgressMovie = function(data) {
+		var _entry, _entry$1, _entry$2, _entry$3, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, data, jm, ok, wpm, wss;
+		wss = this;
+		_tuple = $assertType(data.Data, mapType, true);
+		jm = _tuple[0];
+		ok = _tuple[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is not type of map[string]interface ")];
+		}
+		wpm = new WsProgressMovieJson.ptr("", "", 0, "");
+		_tuple$1 = $assertType((_entry = jm[$String.keyFor("id")], _entry !== undefined ? _entry.v : $ifaceNil), $String, true);
+		wpm.Id = _tuple$1[0];
+		ok = _tuple$1[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'id' ")];
+		}
+		_tuple$2 = $assertType((_entry$1 = jm[$String.keyFor("progress")], _entry$1 !== undefined ? _entry$1.v : $ifaceNil), $Float64, true);
+		wpm.Progress = _tuple$2[0];
+		ok = _tuple$2[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'progress' ")];
+		}
+		_tuple$3 = $assertType((_entry$2 = jm[$String.keyFor("state")], _entry$2 !== undefined ? _entry$2.v : $ifaceNil), $String, true);
+		wpm.State = _tuple$3[0];
+		ok = _tuple$3[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'state' ")];
+		}
+		_tuple$4 = $assertType((_entry$3 = jm[$String.keyFor("file_type")], _entry$3 !== undefined ? _entry$3.v : $ifaceNil), $String, true);
+		wpm.Filetype = _tuple$4[0];
+		ok = _tuple$4[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'file_type' ")];
+		}
+		return [wpm, $ifaceNil];
+	};
+	WsService.prototype.SerializeProgressMovie = function(data) { return this.$val.SerializeProgressMovie(data); };
+	WsService.ptr.prototype.SetOnMessage = function(f) {
+		var f, wss;
+		wss = this;
+		wss.ws.AddEventListener("message", false, f);
+	};
+	WsService.prototype.SetOnMessage = function(f) { return this.$val.SetOnMessage(f); };
+	WsService.ptr.prototype.SetOnOpen = function(f) {
+		var f, wss;
+		wss = this;
+		wss.ws.AddEventListener("open", false, f);
+	};
+	WsService.prototype.SetOnOpen = function(f) { return this.$val.SetOnOpen(f); };
+	WsService.ptr.prototype.SetOnClose = function(f) {
+		var f, wss;
+		wss = this;
+		wss.ws.AddEventListener("close", false, f);
+	};
+	WsService.prototype.SetOnClose = function(f) { return this.$val.SetOnClose(f); };
 	AuthService.methods = [{prop: "PostLogin", name: "PostLogin", pkg: "", typ: $funcType([AuthorizationJson], [$String, ptrType$1], false)}, {prop: "GetIsAdmin", name: "GetIsAdmin", pkg: "", typ: $funcType([], [$Bool, ptrType$1], false)}, {prop: "SaveToken", name: "SaveToken", pkg: "", typ: $funcType([$String], [], false)}, {prop: "RemoveToken", name: "RemoveToken", pkg: "", typ: $funcType([], [], false)}, {prop: "GetToken", name: "GetToken", pkg: "", typ: $funcType([], [$String], false)}];
 	MovieService.methods = [{prop: "AddMovie", name: "AddMovie", pkg: "", typ: $funcType([AddMovieJson], [ptrType$2, ptrType$1], false)}, {prop: "GetMovies", name: "GetMovies", pkg: "", typ: $funcType([PaginationJson], [sliceType$1, ptrType$1], false)}, {prop: "GetMovie", name: "GetMovie", pkg: "", typ: $funcType([$String], [ptrType$5, ptrType$1], false)}, {prop: "DeleteMovie", name: "DeleteMovie", pkg: "", typ: $funcType([$String], [ptrType$1], false)}, {prop: "RemoveMovieSelection", name: "RemoveMovieSelection", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "SelectMovie", name: "SelectMovie", pkg: "", typ: $funcType([$String], [ptrType$1], false)}];
+	ptrType$8.methods = [{prop: "SerializeProgressMovie", name: "SerializeProgressMovie", pkg: "", typ: $funcType([WsData], [ptrType$9, $error], false)}, {prop: "SetOnMessage", name: "SetOnMessage", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetOnOpen", name: "SetOnOpen", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetOnClose", name: "SetOnClose", pkg: "", typ: $funcType([funcType], [], false)}];
 	ErrorMsg.init("", [{prop: "VariableErrors", name: "VariableErrors", embedded: false, exported: true, typ: mapType$1, tag: "json:\"variable_errors\""}, {prop: "Error", name: "Error", embedded: false, exported: true, typ: $String, tag: "json:\"error\""}]);
 	AuthorizationJson.init("", [{prop: "Username", name: "Username", embedded: false, exported: true, typ: $String, tag: "json:\"username\""}, {prop: "Password", name: "Password", embedded: false, exported: true, typ: $String, tag: "json:\"password\""}]);
 	TokenJson.init("", [{prop: "Token", name: "Token", embedded: false, exported: true, typ: $String, tag: "json:\"token\""}]);
@@ -32042,23 +32299,29 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	MovieService.init("", []);
 	AddMovieJson.init("", [{prop: "Url", name: "Url", embedded: false, exported: true, typ: $String, tag: "json:\"url\""}, {prop: "Name", name: "Name", embedded: false, exported: true, typ: $String, tag: "json:\"name\""}]);
 	MovieIdJson.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: "json:\"id\""}]);
-	PaginationJson.init("", [{prop: "LastSeenDate", name: "LastSeenDate", embedded: false, exported: true, typ: ptrType$7, tag: "json:\"last_seen_date\""}, {prop: "Limit", name: "Limit", embedded: false, exported: true, typ: $Int, tag: "json:\"limit\""}]);
-	MovieJson.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: "json:\"id\""}, {prop: "Name", name: "Name", embedded: false, exported: true, typ: $String, tag: "json:\"name\""}, {prop: "Progress", name: "Progress", embedded: false, exported: true, typ: $Float64, tag: "json:\"progress\""}, {prop: "State", name: "State", embedded: false, exported: true, typ: $String, tag: "json:\"state\""}, {prop: "Filetype", name: "Filetype", embedded: false, exported: true, typ: $String, tag: "json:\"filetype\""}, {prop: "CreatedAt", name: "CreatedAt", embedded: false, exported: true, typ: time.Time, tag: "json:\"created_at\""}, {prop: "Error", name: "Error", embedded: false, exported: true, typ: $String, tag: "json:\"error\""}]);
+	PaginationJson.init("", [{prop: "LastSeenDate", name: "LastSeenDate", embedded: false, exported: true, typ: ptrType$3, tag: "json:\"last_seen_date\""}, {prop: "Limit", name: "Limit", embedded: false, exported: true, typ: $Int, tag: "json:\"limit\""}]);
+	MovieJson.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: "json:\"id\""}, {prop: "Name", name: "Name", embedded: false, exported: true, typ: $String, tag: "json:\"name\""}, {prop: "Progress", name: "Progress", embedded: false, exported: true, typ: $Float64, tag: "json:\"progress\""}, {prop: "State", name: "State", embedded: false, exported: true, typ: $String, tag: "json:\"state\""}, {prop: "Filetype", name: "Filetype", embedded: false, exported: true, typ: $String, tag: "json:\"filetype\""}, {prop: "CreatedAt", name: "CreatedAt", embedded: false, exported: true, typ: $Int64, tag: "json:\"created_at\""}]);
+	WsService.init("github.com/mragiadakos/borinema/admin_panel/services", [{prop: "ws", name: "ws", embedded: false, exported: false, typ: ptrType$7, tag: ""}]);
+	WsData.init("", [{prop: "Theme", name: "Theme", embedded: false, exported: true, typ: $String, tag: "json:\"theme\""}, {prop: "Data", name: "Data", embedded: false, exported: true, typ: $emptyInterface, tag: "json:\"data\""}]);
+	WsProgressMovieJson.init("", [{prop: "Id", name: "Id", embedded: false, exported: true, typ: $String, tag: "json:\"id\""}, {prop: "State", name: "State", embedded: false, exported: true, typ: $String, tag: "json:\"state\""}, {prop: "Progress", name: "Progress", embedded: false, exported: true, typ: $Float64, tag: "json:\"progress\""}, {prop: "Filetype", name: "Filetype", embedded: false, exported: true, typ: $String, tag: "json:\"file_type\""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = json$1.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = json.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = localStorage.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = xhr.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = time.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = errors.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = json.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = websocketjs.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = localStorage.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = xhr.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel/actions"] = (function() {
-	var $pkg = {}, $init, services, SetIsAdmin, ToRedirect, SetMovies, PageType, sliceType;
+	var $pkg = {}, $init, services, SetIsAdmin, ToRedirect, SetMovies, SetMovieProgress, SetFirstMovieInList, RemoveMovieFromList, AppendMoviesToList, PageType, sliceType;
 	services = $packages["github.com/mragiadakos/borinema/admin_panel/services"];
 	SetIsAdmin = $pkg.SetIsAdmin = $newType(0, $kindStruct, "actions.SetIsAdmin", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, function(IsAdmin_) {
 		this.$val = this;
@@ -32084,6 +32347,44 @@ $packages["github.com/mragiadakos/borinema/admin_panel/actions"] = (function() {
 		}
 		this.Movies = Movies_;
 	});
+	SetMovieProgress = $pkg.SetMovieProgress = $newType(0, $kindStruct, "actions.SetMovieProgress", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, function(ID_, Progress_, State_, Filetype_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.ID = "";
+			this.Progress = 0;
+			this.State = "";
+			this.Filetype = "";
+			return;
+		}
+		this.ID = ID_;
+		this.Progress = Progress_;
+		this.State = State_;
+		this.Filetype = Filetype_;
+	});
+	SetFirstMovieInList = $pkg.SetFirstMovieInList = $newType(0, $kindStruct, "actions.SetFirstMovieInList", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, function(Movie_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Movie = new services.MovieJson.ptr("", "", 0, "", "", new $Int64(0, 0));
+			return;
+		}
+		this.Movie = Movie_;
+	});
+	RemoveMovieFromList = $pkg.RemoveMovieFromList = $newType(0, $kindStruct, "actions.RemoveMovieFromList", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, function(MovieId_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.MovieId = "";
+			return;
+		}
+		this.MovieId = MovieId_;
+	});
+	AppendMoviesToList = $pkg.AppendMoviesToList = $newType(0, $kindStruct, "actions.AppendMoviesToList", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, function(Movies_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Movies = sliceType.nil;
+			return;
+		}
+		this.Movies = Movies_;
+	});
 	PageType = $pkg.PageType = $newType(8, $kindString, "actions.PageType", true, "github.com/mragiadakos/borinema/admin_panel/actions", true, null);
 	sliceType = $sliceType(services.MovieJson);
 	PageType.prototype.String = function() {
@@ -32096,6 +32397,10 @@ $packages["github.com/mragiadakos/borinema/admin_panel/actions"] = (function() {
 	SetIsAdmin.init("", [{prop: "IsAdmin", name: "IsAdmin", embedded: false, exported: true, typ: $Bool, tag: ""}]);
 	ToRedirect.init("", [{prop: "ToRedirect", name: "ToRedirect", embedded: false, exported: true, typ: PageType, tag: ""}]);
 	SetMovies.init("", [{prop: "Movies", name: "Movies", embedded: false, exported: true, typ: sliceType, tag: ""}]);
+	SetMovieProgress.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Progress", name: "Progress", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "State", name: "State", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Filetype", name: "Filetype", embedded: false, exported: true, typ: $String, tag: ""}]);
+	SetFirstMovieInList.init("", [{prop: "Movie", name: "Movie", embedded: false, exported: true, typ: services.MovieJson, tag: ""}]);
+	RemoveMovieFromList.init("", [{prop: "MovieId", name: "MovieId", embedded: false, exported: true, typ: $String, tag: ""}]);
+	AppendMoviesToList.init("", [{prop: "Movies", name: "Movies", embedded: false, exported: true, typ: sliceType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -32106,7 +32411,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/actions"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
-	var $pkg = {}, $init, actions, services, ID, ListenerRegistry, sliceType, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, funcType, ptrType$5, mapType, idCounter, callbacks, Dispatch, Register, init, onAction, NewListenerRegistry;
+	var $pkg = {}, $init, actions, services, ID, ListenerRegistry, sliceType, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, funcType, ptrType$8, mapType, idCounter, callbacks, Dispatch, Register, init, findMoviesIndex, onAction, NewListenerRegistry;
 	actions = $packages["github.com/mragiadakos/borinema/admin_panel/actions"];
 	services = $packages["github.com/mragiadakos/borinema/admin_panel/services"];
 	ID = $pkg.ID = $newType(4, $kindInt, "store.ID", true, "github.com/mragiadakos/borinema/admin_panel/store", true, null);
@@ -32119,13 +32424,16 @@ $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
 		this.listeners = listeners_;
 	});
 	sliceType = $sliceType(services.MovieJson);
-	ptrType = $ptrType($packages["time"].Location);
-	ptrType$1 = $ptrType(actions.SetIsAdmin);
-	ptrType$2 = $ptrType(actions.ToRedirect);
-	ptrType$3 = $ptrType(actions.SetMovies);
-	ptrType$4 = $ptrType($Int);
+	ptrType = $ptrType(actions.SetIsAdmin);
+	ptrType$1 = $ptrType(actions.ToRedirect);
+	ptrType$2 = $ptrType(actions.SetMovies);
+	ptrType$3 = $ptrType(actions.SetFirstMovieInList);
+	ptrType$4 = $ptrType(actions.RemoveMovieFromList);
+	ptrType$5 = $ptrType(actions.AppendMoviesToList);
+	ptrType$6 = $ptrType(actions.SetMovieProgress);
+	ptrType$7 = $ptrType($Int);
 	funcType = $funcType([], [], false);
-	ptrType$5 = $ptrType(ListenerRegistry);
+	ptrType$8 = $ptrType(ListenerRegistry);
 	mapType = $mapType($emptyInterface, funcType);
 	Dispatch = function(action) {
 		var _entry, _i, _keys, _ref, action, c, $s, $r;
@@ -32159,27 +32467,60 @@ $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
 	init = function() {
 		Register(onAction);
 	};
+	findMoviesIndex = function(movies, id) {
+		var _i, _ref, i, id, index, movies, v;
+		index = -1;
+		_ref = $pkg.Movies;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			i = _i;
+			v = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), services.MovieJson);
+			if (id === v.ID) {
+				index = i;
+				break;
+			}
+			_i++;
+		}
+		return index;
+	};
 	onAction = function(action) {
-		var _ref, a, a$1, a$2, a$3, action, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _ref = $f._ref; a = $f.a; a$1 = $f.a$1; a$2 = $f.a$2; a$3 = $f.a$3; action = $f.action; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _ref, a, a$1, a$2, a$3, a$4, a$5, a$6, a$7, action, index, index$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _ref = $f._ref; a = $f.a; a$1 = $f.a$1; a$2 = $f.a$2; a$3 = $f.a$3; a$4 = $f.a$4; a$5 = $f.a$5; a$6 = $f.a$6; a$7 = $f.a$7; action = $f.action; index = $f.index; index$1 = $f.index$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		console.log(action);
 		_ref = action;
-		if ($assertType(_ref, ptrType$1, true)[1]) {
+		if ($assertType(_ref, ptrType, true)[1]) {
 			a = _ref.$val;
 			$pkg.IsAdmin = a.IsAdmin;
-		} else if ($assertType(_ref, ptrType$2, true)[1]) {
+		} else if ($assertType(_ref, ptrType$1, true)[1]) {
 			a$1 = _ref.$val;
 			$pkg.CurrentPage = a$1.ToRedirect;
-		} else if ($assertType(_ref, ptrType$3, true)[1]) {
+		} else if ($assertType(_ref, ptrType$2, true)[1]) {
 			a$2 = _ref.$val;
 			$pkg.Movies = a$2.Movies;
+		} else if ($assertType(_ref, ptrType$3, true)[1]) {
+			a$3 = _ref.$val;
+			$pkg.Movies = $appendSlice(new sliceType([$clone(a$3.Movie, services.MovieJson)]), $pkg.Movies);
+		} else if ($assertType(_ref, ptrType$4, true)[1]) {
+			a$4 = _ref.$val;
+			index = findMoviesIndex($pkg.Movies, a$4.MovieId);
+			$pkg.Movies = $appendSlice($subslice($pkg.Movies, 0, index), $subslice($pkg.Movies, (index + 1 >> 0)));
+		} else if ($assertType(_ref, ptrType$5, true)[1]) {
+			a$5 = _ref.$val;
+			$pkg.Movies = $appendSlice($pkg.Movies, a$5.Movies);
+		} else if ($assertType(_ref, ptrType$6, true)[1]) {
+			a$6 = _ref.$val;
+			index$1 = findMoviesIndex($pkg.Movies, a$6.ID);
+			((index$1 < 0 || index$1 >= $pkg.Movies.$length) ? ($throwRuntimeError("index out of range"), undefined) : $pkg.Movies.$array[$pkg.Movies.$offset + index$1]).Progress = a$6.Progress;
+			((index$1 < 0 || index$1 >= $pkg.Movies.$length) ? ($throwRuntimeError("index out of range"), undefined) : $pkg.Movies.$array[$pkg.Movies.$offset + index$1]).State = a$6.State;
+			((index$1 < 0 || index$1 >= $pkg.Movies.$length) ? ($throwRuntimeError("index out of range"), undefined) : $pkg.Movies.$array[$pkg.Movies.$offset + index$1]).Filetype = a$6.Filetype;
 		} else {
-			a$3 = _ref;
+			a$7 = _ref;
 			$s = -1; return;
 		}
 		$r = $pkg.Listeners.Fire(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: onAction }; } $f._ref = _ref; $f.a = a; $f.a$1 = a$1; $f.a$2 = a$2; $f.a$3 = a$3; $f.action = action; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: onAction }; } $f._ref = _ref; $f.a = a; $f.a$1 = a$1; $f.a$2 = a$2; $f.a$3 = a$3; $f.a$4 = a$4; $f.a$5 = a$5; $f.a$6 = a$6; $f.a$7 = a$7; $f.action = action; $f.index = index; $f.index$1 = index$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	NewListenerRegistry = function() {
 		return new ListenerRegistry.ptr({});
@@ -32189,7 +32530,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
 		var _entry, _key, _tuple, key, listener, ok, r;
 		r = this;
 		if ($interfaceIsEqual(key, $ifaceNil)) {
-			key = $newDataPointer(0, ptrType$4);
+			key = $newDataPointer(0, ptrType$7);
 		}
 		_tuple = (_entry = r.listeners[$emptyInterface.keyFor(key)], _entry !== undefined ? [_entry.v, true] : [$throwNilPointerError, false]);
 		ok = _tuple[1];
@@ -32227,7 +32568,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: ListenerRegistry.ptr.prototype.Fire }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._ref = _ref; $f.l = l; $f.r = r; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	ListenerRegistry.prototype.Fire = function() { return this.$val.Fire(); };
-	ptrType$5.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([$emptyInterface, funcType], [], false)}, {prop: "Remove", name: "Remove", pkg: "", typ: $funcType([$emptyInterface], [], false)}, {prop: "Fire", name: "Fire", pkg: "", typ: $funcType([], [], false)}];
+	ptrType$8.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([$emptyInterface, funcType], [], false)}, {prop: "Remove", name: "Remove", pkg: "", typ: $funcType([$emptyInterface], [], false)}, {prop: "Fire", name: "Fire", pkg: "", typ: $funcType([], [], false)}];
 	ListenerRegistry.init("github.com/mragiadakos/borinema/admin_panel/store", [{prop: "listeners", name: "listeners", embedded: false, exported: false, typ: mapType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -32247,7 +32588,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/store"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = (function() {
-	var $pkg = {}, $init, js, reflect, Core, Component, Copier, Mounter, Unmounter, Keyer, ComponentOrHTML, RenderSkipper, HTML, List, KeyedList, batchRenderer, jsObject, wrappedObject, EventListener, Event, MarkupOrChild, Applyer, MarkupList, sliceType, sliceType$1, ptrType, sliceType$2, ptrType$1, sliceType$3, sliceType$4, structType, ptrType$2, funcType, sliceType$5, funcType$1, funcType$2, sliceType$6, ptrType$3, mapType, mapType$1, mapType$2, mapType$3, ptrType$4, mapType$4, ptrType$5, funcType$3, batch, global, undefined$1, isTest, Tag, Text, Rerender, extractHTML, sameType, copyComponent, copyProps, render, renderComponent, mountUnmount, mount, unmount, requestAnimationFrame, RenderBody, wrapObject, init, replaceNode, apply, Markup, If;
+	var $pkg = {}, $init, js, reflect, Core, Component, Copier, Mounter, Unmounter, Keyer, ComponentOrHTML, RenderSkipper, HTML, List, KeyedList, batchRenderer, jsObject, wrappedObject, EventListener, Event, MarkupOrChild, Applyer, markupFunc, MarkupList, sliceType, sliceType$1, ptrType, sliceType$2, ptrType$1, sliceType$3, sliceType$4, structType, ptrType$2, funcType, sliceType$5, funcType$1, funcType$2, sliceType$6, ptrType$3, mapType, mapType$1, mapType$2, mapType$3, ptrType$4, mapType$4, ptrType$5, funcType$3, batch, global, undefined$1, isTest, Tag, Text, Rerender, extractHTML, sameType, copyComponent, copyProps, render, renderComponent, mountUnmount, mount, unmount, requestAnimationFrame, RenderBody, SetTitle, AddStylesheet, wrapObject, init, replaceNode, apply, Attribute, Class, mustValidateClassNames, containsSpace, Markup, If;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	reflect = $packages["reflect"];
 	Core = $pkg.Core = $newType(0, $kindStruct, "vecty.Core", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", true, function(prevRenderComponent_, prevRender_, mounted_, unmounted_) {
@@ -32369,6 +32710,7 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 	});
 	MarkupOrChild = $pkg.MarkupOrChild = $newType(8, $kindInterface, "vecty.MarkupOrChild", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", true, null);
 	Applyer = $pkg.Applyer = $newType(8, $kindInterface, "vecty.Applyer", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", true, null);
+	markupFunc = $pkg.markupFunc = $newType(4, $kindFunc, "vecty.markupFunc", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", false, null);
 	MarkupList = $pkg.MarkupList = $newType(0, $kindStruct, "vecty.MarkupList", true, "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", true, function(list_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -33973,6 +34315,31 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 		/* */ } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: RenderBody }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.body = body; $f.doc = doc; $f.m = m; $f.nextRender = nextRender; $f.ok = ok; $f.pendingMounts = pendingMounts; $f.skip = skip; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
 	$pkg.RenderBody = RenderBody;
+	SetTitle = function(title) {
+		var _r, title, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; title = $f.title; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = global.Get("document"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = _r.Set("title", new $String(title)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: SetTitle }; } $f._r = _r; $f.title = title; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.SetTitle = SetTitle;
+	AddStylesheet = function(url) {
+		var _r, _r$1, _r$2, _r$3, _r$4, link, url, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; link = $f.link; url = $f.url; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = global.Get("document"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = _r.Call("createElement", new sliceType$1([new $String("link")])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		link = _r$1;
+		$r = link.Set("rel", new $String("stylesheet")); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = link.Set("href", new $String(url)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$2 = global.Get("document"); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = _r$2.Get("head"); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = _r$3.Call("appendChild", new sliceType$1([link])); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$4;
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AddStylesheet }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.link = link; $f.url = url; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AddStylesheet = AddStylesheet;
 	wrapObject = function(j) {
 		var j, x;
 		if (j === null) {
@@ -34129,6 +34496,73 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: apply }; } $f._r = _r; $f._ref = _ref; $f.h = h; $f.m = m; $f.m$1 = m$1; $f.m$2 = m$2; $f.m$3 = m$3; $f.m$4 = m$4; $f.$s = $s; $f.$r = $r; return $f;
 	};
+	markupFunc.prototype.Apply = function(h) {
+		var h, m, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; h = $f.h; m = $f.m; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = this.$val;
+		$r = m(h); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: markupFunc.prototype.Apply }; } $f.h = h; $f.m = m; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(markupFunc).prototype.Apply = function(h) { return new markupFunc(this.$get()).Apply(h); };
+	Attribute = function(key, value) {
+		var key, value;
+		return new markupFunc(((function(h) {
+			var _key, h;
+			if (h.attributes === false) {
+				h.attributes = {};
+			}
+			_key = key; (h.attributes || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: value };
+		})));
+	};
+	$pkg.Attribute = Attribute;
+	Class = function(class$1) {
+		var class$1;
+		mustValidateClassNames(class$1);
+		return new markupFunc(((function(h) {
+			var _i, _key, _ref, h, name;
+			if (h.classes === false) {
+				h.classes = {};
+			}
+			_ref = class$1;
+			_i = 0;
+			while (true) {
+				if (!(_i < _ref.$length)) { break; }
+				name = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+				_key = name; (h.classes || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new structType.ptr() };
+				_i++;
+			}
+		})));
+	};
+	$pkg.Class = Class;
+	mustValidateClassNames = function(class$1) {
+		var _i, _ref, class$1, name;
+		_ref = class$1;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			name = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			if (containsSpace(name)) {
+				$panic(new $String("vecty: invalid argument to vecty.Class \"" + name + "\" (string may not contain spaces)"));
+			}
+			_i++;
+		}
+	};
+	containsSpace = function(s) {
+		var _i, _ref, _rune, c, s;
+		_ref = s;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.length)) { break; }
+			_rune = $decodeRune(_ref, _i);
+			c = _rune[0];
+			if (c === 32) {
+				return true;
+			}
+			_i += _rune[1];
+		}
+		return false;
+	};
 	MarkupList.ptr.prototype.Apply = function(h) {
 		var _i, _ref, a, h, m, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _ref = $f._ref; a = $f.a; h = $f.h; m = $f.m; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34171,6 +34605,7 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 	ptrType$4.methods = [{prop: "add", name: "add", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([Component], [], false)}, {prop: "render", name: "render", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([$Float64], [], false)}];
 	wrappedObject.methods = [{prop: "Set", name: "Set", pkg: "", typ: $funcType([$String, $emptyInterface], [], false)}, {prop: "Get", name: "Get", pkg: "", typ: $funcType([$String], [jsObject], false)}, {prop: "Delete", name: "Delete", pkg: "", typ: $funcType([$String], [], false)}, {prop: "Call", name: "Call", pkg: "", typ: $funcType([$String, sliceType$1], [jsObject], true)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Bool", name: "Bool", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Int", name: "Int", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Float", name: "Float", pkg: "", typ: $funcType([], [$Float64], false)}];
 	ptrType$1.methods = [{prop: "PreventDefault", name: "PreventDefault", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "StopPropagation", name: "StopPropagation", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "Apply", name: "Apply", pkg: "", typ: $funcType([ptrType], [], false)}];
+	markupFunc.methods = [{prop: "Apply", name: "Apply", pkg: "", typ: $funcType([ptrType], [], false)}];
 	MarkupList.methods = [{prop: "Apply", name: "Apply", pkg: "", typ: $funcType([ptrType], [], false)}, {prop: "isMarkupOrChild", name: "isMarkupOrChild", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([], [], false)}];
 	Core.init("github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", [{prop: "prevRenderComponent", name: "prevRenderComponent", embedded: false, exported: false, typ: Component, tag: ""}, {prop: "prevRender", name: "prevRender", embedded: false, exported: false, typ: ComponentOrHTML, tag: ""}, {prop: "mounted", name: "mounted", embedded: false, exported: false, typ: $Bool, tag: ""}, {prop: "unmounted", name: "unmounted", embedded: false, exported: false, typ: $Bool, tag: ""}]);
 	Component.init([{prop: "Context", name: "Context", pkg: "", typ: $funcType([], [ptrType$3], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [ComponentOrHTML], false)}, {prop: "isComponentOrHTML", name: "isComponentOrHTML", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([], [], false)}, {prop: "isMarkupOrChild", name: "isMarkupOrChild", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([], [], false)}]);
@@ -34190,6 +34625,7 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 	Event.init("", [{prop: "Object", name: "Object", embedded: true, exported: true, typ: ptrType$2, tag: ""}, {prop: "Target", name: "Target", embedded: false, exported: true, typ: ptrType$2, tag: ""}]);
 	MarkupOrChild.init([{prop: "isMarkupOrChild", name: "isMarkupOrChild", pkg: "github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", typ: $funcType([], [], false)}]);
 	Applyer.init([{prop: "Apply", name: "Apply", pkg: "", typ: $funcType([ptrType], [], false)}]);
+	markupFunc.init([ptrType], [], false);
 	MarkupList.init("github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty", [{prop: "list", name: "list", embedded: false, exported: false, typ: sliceType$6, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -34207,8 +34643,16 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"] = 
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/elem"] = (function() {
-	var $pkg = {}, $init, vecty, Body, Break, Button, Div, Heading4, Input, ListItem, Span, UnorderedList;
+	var $pkg = {}, $init, vecty, Abbreviation, Body, Break, Button, Div, Heading1, Heading4, Input, Span, Table, TableData, TableHeader, TableHead, TableRow;
 	vecty = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"];
+	Abbreviation = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("abbr", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Abbreviation }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Abbreviation = Abbreviation;
 	Body = function(markup) {
 		var _r, markup, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34241,6 +34685,14 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/elem
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Div }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Div = Div;
+	Heading1 = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("h1", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Heading1 }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Heading1 = Heading1;
 	Heading4 = function(markup) {
 		var _r, markup, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34257,14 +34709,6 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/elem
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Input }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Input = Input;
-	ListItem = function(markup) {
-		var _r, markup, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = vecty.Tag("li", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ListItem }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ListItem = ListItem;
 	Span = function(markup) {
 		var _r, markup, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34273,14 +34717,46 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/elem
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Span }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Span = Span;
-	UnorderedList = function(markup) {
+	Table = function(markup) {
 		var _r, markup, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = vecty.Tag("ul", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = vecty.Tag("table", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: UnorderedList }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Table }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.UnorderedList = UnorderedList;
+	$pkg.Table = Table;
+	TableData = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("td", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TableData }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TableData = TableData;
+	TableHeader = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("th", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TableHeader }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TableHeader = TableHeader;
+	TableHead = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("thead", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TableHead }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TableHead = TableHead;
+	TableRow = function(markup) {
+		var _r, markup, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; markup = $f.markup; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = vecty.Tag("tr", markup); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TableRow }; } $f._r = _r; $f.markup = markup; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TableRow = TableRow;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34313,13 +34789,14 @@ $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/even
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function() {
-	var $pkg = {}, $init, actions, services, store, vecty, elem, event, FormMovieComponent, LogoutComponent, MoviesComponent, ptrType, ptrType$1, sliceType, sliceType$1, sliceType$2, sliceType$3, ptrType$2, ptrType$3, ptrType$4, ptrType$5;
+	var $pkg = {}, $init, actions, services, store, vecty, elem, event, strconv, FormMovieComponent, LogoutComponent, MoviesComponent, ptrType, sliceType, sliceType$1, sliceType$2, ptrType$1, sliceType$3, sliceType$4, ptrType$2, ptrType$3, ptrType$4, funcType, ptrType$5;
 	actions = $packages["github.com/mragiadakos/borinema/admin_panel/actions"];
 	services = $packages["github.com/mragiadakos/borinema/admin_panel/services"];
 	store = $packages["github.com/mragiadakos/borinema/admin_panel/store"];
 	vecty = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"];
 	elem = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/elem"];
 	event = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty/event"];
+	strconv = $packages["strconv"];
 	FormMovieComponent = $pkg.FormMovieComponent = $newType(0, $kindStruct, "components.FormMovieComponent", true, "github.com/mragiadakos/borinema/admin_panel/components", true, function(Core_, link_, name_, errStr_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -34346,21 +34823,23 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Core = new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false);
-			this.Movies = sliceType.nil;
+			this.Movies = sliceType$3.nil;
 			return;
 		}
 		this.Core = Core_;
 		this.Movies = Movies_;
 	});
 	ptrType = $ptrType(services.ErrorMsg);
-	ptrType$1 = $ptrType($packages["time"].Time);
-	sliceType = $sliceType(services.MovieJson);
-	sliceType$1 = $sliceType(vecty.MarkupOrChild);
-	sliceType$2 = $sliceType(vecty.Applyer);
-	sliceType$3 = $sliceType(vecty.ComponentOrHTML);
+	sliceType = $sliceType(vecty.MarkupOrChild);
+	sliceType$1 = $sliceType(vecty.Applyer);
+	sliceType$2 = $sliceType(vecty.ComponentOrHTML);
+	ptrType$1 = $ptrType($Int64);
+	sliceType$3 = $sliceType(services.MovieJson);
+	sliceType$4 = $sliceType($String);
 	ptrType$2 = $ptrType(vecty.Event);
 	ptrType$3 = $ptrType(FormMovieComponent);
 	ptrType$4 = $ptrType(LogoutComponent);
+	funcType = $funcType([ptrType$2], [], false);
 	ptrType$5 = $ptrType(MoviesComponent);
 	FormMovieComponent.ptr.prototype.onLink = function(event$1) {
 		var event$1, fmc;
@@ -34378,8 +34857,9 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 		var event$1, fmc;
 		fmc = this;
 		$go((function $b() {
-			var _r, _tuple, amj, errMsg, ms, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; amj = $f.amj; errMsg = $f.errMsg; ms = $f.ms; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var _r, _tuple, amj, errMsg, movieId, ms, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; amj = $f.amj; errMsg = $f.errMsg; movieId = $f.movieId; ms = $f.ms; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			movieId = [movieId];
 			ms = [ms];
 			ms[0] = new services.MovieService.ptr();
 			amj = new services.AddMovieJson.ptr("", "");
@@ -34387,6 +34867,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 			amj.Url = fmc.link;
 			_r = $clone(ms[0], services.MovieService).AddMovie($clone(amj, services.AddMovieJson)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			_tuple = _r;
+			movieId[0] = _tuple[0];
 			errMsg = _tuple[1];
 			/* */ if (!(errMsg === ptrType.nil)) { $s = 2; continue; }
 			/* */ $s = 3; continue;
@@ -34395,20 +34876,23 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 				$r = vecty.Rerender(fmc); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				$s = -1; return;
 			/* } */ case 3:
-			$go((function(ms) { return function $b() {
-				var _r$1, _tuple$1, mvs, pag, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _tuple$1 = $f._tuple$1; mvs = $f.mvs; pag = $f.pag; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				pag = new services.PaginationJson.ptr(ptrType$1.nil, 0);
-				pag.Limit = -1;
-				_r$1 = $clone(ms[0], services.MovieService).GetMovies($clone(pag, services.PaginationJson)); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$go((function(movieId, ms) { return function $b() {
+				var _r$1, _tuple$1, err, mv, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _tuple$1 = $f._tuple$1; err = $f.err; mv = $f.mv; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				_r$1 = $clone(ms[0], services.MovieService).GetMovie(movieId[0].ID); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 				_tuple$1 = _r$1;
-				mvs = _tuple$1[0];
-				$r = store.Dispatch(new actions.SetMovies.ptr(mvs)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				mv = _tuple$1[0];
+				err = _tuple$1[1];
+				/* */ if (err === ptrType.nil) { $s = 2; continue; }
+				/* */ $s = 3; continue;
+				/* if (err === ptrType.nil) { */ case 2:
+					$r = store.Dispatch(new actions.SetFirstMovieInList.ptr($clone(mv, services.MovieJson))); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 3:
 				$s = -1; return;
-				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f._tuple$1 = _tuple$1; $f.mvs = mvs; $f.pag = pag; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(ms), []);
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f._tuple$1 = _tuple$1; $f.err = err; $f.mv = mv; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(movieId, ms), []);
 			$s = -1; return;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._tuple = _tuple; $f.amj = amj; $f.errMsg = errMsg; $f.ms = ms; $f.$s = $s; $f.$r = $r; return $f;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._tuple = _tuple; $f.amj = amj; $f.errMsg = errMsg; $f.movieId = movieId; $f.ms = ms; $f.$s = $s; $f.$r = $r; return $f;
 		}), []);
 	};
 	FormMovieComponent.prototype.onSubmit = function(event$1) { return this.$val.onSubmit(event$1); };
@@ -34416,36 +34900,36 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 		var _arg, _arg$1, _arg$10, _arg$11, _arg$12, _arg$13, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _arg$9, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, fmc, x, x$1, x$2, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$10 = $f._arg$10; _arg$11 = $f._arg$11; _arg$12 = $f._arg$12; _arg$13 = $f._arg$13; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _arg$9 = $f._arg$9; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; fmc = $f.fmc; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		fmc = this;
-		_r = vecty.Text("Upload movie", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = elem.Heading4(new sliceType$1([_r])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r = vecty.Text("Upload movie", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = elem.Heading4(new sliceType([_r])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_arg = _r$1;
-		_r$2 = vecty.Text("Name:", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_r$3 = elem.Span(new sliceType$1([_r$2])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$2 = vecty.Text("Name:", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = elem.Span(new sliceType([_r$2])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_arg$1 = _r$3;
-		_r$4 = elem.Input(new sliceType$1([(x = vecty.Markup(new sliceType$2([event.Change($methodVal(fmc, "onName"))])), new x.constructor.elem(x))])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$4 = elem.Input(new sliceType([(x = vecty.Markup(new sliceType$1([event.Change($methodVal(fmc, "onName"))])), new x.constructor.elem(x))])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		_arg$2 = _r$4;
-		_r$5 = elem.Break(new sliceType$1([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$5 = elem.Break(new sliceType([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 		_arg$3 = _r$5;
-		_r$6 = vecty.Text("Link:", new sliceType$1([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_r$7 = elem.Span(new sliceType$1([_r$6])); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_r$6 = vecty.Text("Link:", new sliceType([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$7 = elem.Span(new sliceType([_r$6])); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 		_arg$4 = _r$7;
-		_r$8 = elem.Input(new sliceType$1([(x$1 = vecty.Markup(new sliceType$2([event.Change($methodVal(fmc, "onLink"))])), new x$1.constructor.elem(x$1))])); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$8 = elem.Input(new sliceType([(x$1 = vecty.Markup(new sliceType$1([event.Change($methodVal(fmc, "onLink"))])), new x$1.constructor.elem(x$1))])); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 		_arg$5 = _r$8;
-		_r$9 = elem.Break(new sliceType$1([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_r$9 = elem.Break(new sliceType([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 		_arg$6 = _r$9;
 		_arg$7 = fmc.errStr.length > 0;
-		_r$10 = vecty.Text("Error: " + fmc.errStr, new sliceType$1([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_r$10 = vecty.Text("Error: " + fmc.errStr, new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 		_arg$8 = _r$10;
-		_r$11 = vecty.If(_arg$7, new sliceType$3([_arg$8])); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		_r$11 = vecty.If(_arg$7, new sliceType$2([_arg$8])); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
 		_arg$9 = _r$11;
-		_r$12 = elem.Break(new sliceType$1([])); /* */ $s = 13; case 13: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+		_r$12 = elem.Break(new sliceType([])); /* */ $s = 13; case 13: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
 		_arg$10 = _r$12;
-		_arg$11 = (x$2 = vecty.Markup(new sliceType$2([event.Click($methodVal(fmc, "onSubmit"))])), new x$2.constructor.elem(x$2));
-		_r$13 = vecty.Text("Submit", new sliceType$1([])); /* */ $s = 14; case 14: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+		_arg$11 = (x$2 = vecty.Markup(new sliceType$1([event.Click($methodVal(fmc, "onSubmit"))])), new x$2.constructor.elem(x$2));
+		_r$13 = vecty.Text("Submit", new sliceType([])); /* */ $s = 14; case 14: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
 		_arg$12 = _r$13;
-		_r$14 = elem.Button(new sliceType$1([_arg$11, _arg$12])); /* */ $s = 15; case 15: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+		_r$14 = elem.Button(new sliceType([_arg$11, _arg$12])); /* */ $s = 15; case 15: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 		_arg$13 = _r$14;
-		_r$15 = elem.Div(new sliceType$1([_arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$9, _arg$10, _arg$13])); /* */ $s = 16; case 16: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+		_r$15 = elem.Div(new sliceType([_arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$9, _arg$10, _arg$13])); /* */ $s = 16; case 16: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
 		$s = -1; return _r$15;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: FormMovieComponent.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$10 = _arg$10; $f._arg$11 = _arg$11; $f._arg$12 = _arg$12; $f._arg$13 = _arg$13; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._arg$9 = _arg$9; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.fmc = fmc; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -34469,49 +34953,171 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 		var _arg, _arg$1, _r, _r$1, _r$2, lc, x, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; lc = $f.lc; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		lc = this;
-		_arg = (x = vecty.Markup(new sliceType$2([event.Click($methodVal(lc, "onLogout"))])), new x.constructor.elem(x));
-		_r = vecty.Text("Logout", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = (x = vecty.Markup(new sliceType$1([event.Click($methodVal(lc, "onLogout"))])), new x.constructor.elem(x));
+		_r = vecty.Text("Logout", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_arg$1 = _r;
-		_r$1 = elem.Button(new sliceType$1([_arg, _arg$1])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_r$2 = elem.Div(new sliceType$1([_r$1])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$1 = elem.Button(new sliceType([_arg, _arg$1])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = elem.Div(new sliceType([_r$1])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		$s = -1; return _r$2;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: LogoutComponent.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.lc = lc; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LogoutComponent.prototype.Render = function() { return this.$val.Render(); };
+	MoviesComponent.ptr.prototype.renderMoviesTableHead = function() {
+		var _arg, _arg$1, _arg$10, _arg$11, _arg$12, _arg$13, _arg$14, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _arg$9, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, mc, x, x$1, x$2, x$3, x$4, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$10 = $f._arg$10; _arg$11 = $f._arg$11; _arg$12 = $f._arg$12; _arg$13 = $f._arg$13; _arg$14 = $f._arg$14; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _arg$9 = $f._arg$9; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; mc = $f.mc; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		mc = this;
+		_arg = (x = vecty.Markup(new sliceType$1([vecty.Attribute("title", new $String("Name"))])), new x.constructor.elem(x));
+		_r = vecty.Text("Name", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg$1 = _r;
+		_r$1 = elem.Abbreviation(new sliceType([_arg, _arg$1])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = elem.TableHeader(new sliceType([_r$1])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$2 = _r$2;
+		_arg$3 = (x$1 = vecty.Markup(new sliceType$1([vecty.Attribute("title", new $String("File Type"))])), new x$1.constructor.elem(x$1));
+		_r$3 = vecty.Text("File Type", new sliceType([])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$4 = _r$3;
+		_r$4 = elem.Abbreviation(new sliceType([_arg$3, _arg$4])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$5 = elem.TableHeader(new sliceType([_r$4])); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_arg$5 = _r$5;
+		_arg$6 = (x$2 = vecty.Markup(new sliceType$1([vecty.Attribute("title", new $String("State"))])), new x$2.constructor.elem(x$2));
+		_r$6 = vecty.Text("State", new sliceType([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_arg$7 = _r$6;
+		_r$7 = elem.Abbreviation(new sliceType([_arg$6, _arg$7])); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_r$8 = elem.TableHeader(new sliceType([_r$7])); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_arg$8 = _r$8;
+		_arg$9 = (x$3 = vecty.Markup(new sliceType$1([vecty.Attribute("title", new $String("Progress"))])), new x$3.constructor.elem(x$3));
+		_r$9 = vecty.Text("Progress", new sliceType([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_arg$10 = _r$9;
+		_r$10 = elem.Abbreviation(new sliceType([_arg$9, _arg$10])); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_r$11 = elem.TableHeader(new sliceType([_r$10])); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		_arg$11 = _r$11;
+		_arg$12 = (x$4 = vecty.Markup(new sliceType$1([vecty.Attribute("title", new $String("Delete"))])), new x$4.constructor.elem(x$4));
+		_r$12 = vecty.Text("Delete", new sliceType([])); /* */ $s = 13; case 13: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+		_arg$13 = _r$12;
+		_r$13 = elem.Abbreviation(new sliceType([_arg$12, _arg$13])); /* */ $s = 14; case 14: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+		_r$14 = elem.TableHeader(new sliceType([_r$13])); /* */ $s = 15; case 15: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+		_arg$14 = _r$14;
+		_r$15 = elem.TableRow(new sliceType([_arg$2, _arg$5, _arg$8, _arg$11, _arg$14])); /* */ $s = 16; case 16: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+		_r$16 = elem.TableHead(new sliceType([_r$15])); /* */ $s = 17; case 17: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+		$s = -1; return _r$16;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MoviesComponent.ptr.prototype.renderMoviesTableHead }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$10 = _arg$10; $f._arg$11 = _arg$11; $f._arg$12 = _arg$12; $f._arg$13 = _arg$13; $f._arg$14 = _arg$14; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._arg$9 = _arg$9; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.mc = mc; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MoviesComponent.prototype.renderMoviesTableHead = function() { return this.$val.renderMoviesTableHead(); };
+	MoviesComponent.ptr.prototype.renderMoviesTableRow = function(index, movie) {
+		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, index, mc, movie, prog, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; index = $f.index; mc = $f.mc; movie = $f.movie; prog = $f.prog; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		mc = this;
+		prog = strconv.FormatFloat(movie.Progress, 102, 1, 64);
+		_r = vecty.Text(movie.Name, new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = elem.TableData(new sliceType([_r])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg = _r$1;
+		_r$2 = vecty.Text(movie.Filetype, new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = elem.TableData(new sliceType([_r$2])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$1 = _r$3;
+		_r$4 = vecty.Text(movie.State, new sliceType([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$5 = elem.TableData(new sliceType([_r$4])); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_arg$2 = _r$5;
+		_r$6 = vecty.Text(prog, new sliceType([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$7 = elem.TableData(new sliceType([_r$6])); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_arg$3 = _r$7;
+		_arg$4 = (x = vecty.Markup(new sliceType$1([event.Click(mc.onDeleteMovie(movie.ID))])), new x.constructor.elem(x));
+		_r$8 = vecty.Text("Delete", new sliceType([])); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_arg$5 = _r$8;
+		_r$9 = elem.Button(new sliceType([_arg$4, _arg$5])); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_r$10 = elem.TableData(new sliceType([_r$9])); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_arg$6 = _r$10;
+		_r$11 = elem.TableRow(new sliceType([_arg, _arg$1, _arg$2, _arg$3, _arg$6])); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		$s = -1; return _r$11;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MoviesComponent.ptr.prototype.renderMoviesTableRow }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.index = index; $f.mc = mc; $f.movie = movie; $f.prog = prog; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MoviesComponent.prototype.renderMoviesTableRow = function(index, movie) { return this.$val.renderMoviesTableRow(index, movie); };
+	MoviesComponent.ptr.prototype.onDeleteMovie = function(id) {
+		var id, mc;
+		mc = this;
+		return (function(e) {
+			var e;
+			$go((function $b() {
+				var _r, ms, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; ms = $f.ms; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				ms = new services.MovieService.ptr();
+				_r = $clone(ms, services.MovieService).DeleteMovie(id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				$r = store.Dispatch(new actions.RemoveMovieFromList.ptr(id)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = -1; return;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f.ms = ms; $f.$s = $s; $f.$r = $r; return $f;
+			}), []);
+		});
+	};
+	MoviesComponent.prototype.onDeleteMovie = function(id) { return this.$val.onDeleteMovie(id); };
+	MoviesComponent.ptr.prototype.onMore = function(e) {
+		var e, mc;
+		mc = this;
+		$go((function $b() {
+			var _r, _tuple, createdAt, ms, mvs, pag, x, x$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; createdAt = $f.createdAt; ms = $f.ms; mvs = $f.mvs; pag = $f.pag; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			createdAt = [createdAt];
+			/* */ if (store.Movies.$length > 0) { $s = 1; continue; }
+			/* */ $s = 2; continue;
+			/* if (store.Movies.$length > 0) { */ case 1:
+				createdAt[0] = (x = store.Movies, x$1 = store.Movies.$length - 1 >> 0, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1])).CreatedAt;
+				ms = new services.MovieService.ptr();
+				pag = new services.PaginationJson.ptr(ptrType$1.nil, 0);
+				pag.Limit = 10;
+				pag.LastSeenDate = (createdAt.$ptr || (createdAt.$ptr = new ptrType$1(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, createdAt)));
+				_r = $clone(ms, services.MovieService).GetMovies($clone(pag, services.PaginationJson)); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_tuple = _r;
+				mvs = _tuple[0];
+				$r = store.Dispatch(new actions.AppendMoviesToList.ptr(mvs)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 2:
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._tuple = _tuple; $f.createdAt = createdAt; $f.ms = ms; $f.mvs = mvs; $f.pag = pag; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+		}), []);
+	};
+	MoviesComponent.prototype.onMore = function(e) { return this.$val.onMore(e); };
 	MoviesComponent.ptr.prototype.Render = function() {
-		var _arg, _arg$1, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _ref, item, lis, mc, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _ref = $f._ref; item = $f.item; lis = $f.lis; mc = $f.mc; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _arg$9, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _ref, i, item, lis, mc, v, x, x$1, x$2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _arg$9 = $f._arg$9; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _ref = $f._ref; i = $f.i; item = $f.item; lis = $f.lis; mc = $f.mc; v = $f.v; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mc = this;
 		lis = vecty.List.nil;
 		_ref = mc.Movies;
 		_i = 0;
 		/* while (true) { */ case 1:
 			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
 			v = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), services.MovieJson);
-			_r = vecty.Text(v.Name, new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r$1 = elem.Span(new sliceType$1([_r])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = elem.ListItem(new sliceType$1([_r$1])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			item = _r$2;
+			_r = mc.renderMoviesTableRow(i, $clone(v, services.MovieJson)); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			item = _r;
 			lis = $append(lis, item);
 			_i++;
 		/* } */ $s = 1; continue; case 2:
 		console.log("render");
-		_r$3 = vecty.Text("Movies", new sliceType$1([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_r$4 = elem.Heading4(new sliceType$1([_r$3])); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		_arg = _r$4;
-		_r$5 = elem.UnorderedList(new sliceType$1([lis])); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_arg$1 = _r$5;
-		_r$6 = elem.Div(new sliceType$1([_arg, _arg$1])); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		$s = -1; return _r$6;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MoviesComponent.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f.item = item; $f.lis = lis; $f.mc = mc; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		_r$1 = vecty.Text("Movies", new sliceType([])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = elem.Heading1(new sliceType([_r$1])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg = _r$2;
+		_arg$1 = (x = vecty.Markup(new sliceType$1([vecty.Class(new sliceType$4(["scrollbar"]))])), new x.constructor.elem(x));
+		_arg$2 = (x$1 = vecty.Markup(new sliceType$1([vecty.Class(new sliceType$4(["table"])), vecty.Class(new sliceType$4(["is-fullwidth"]))])), new x$1.constructor.elem(x$1));
+		_r$3 = mc.renderMoviesTableHead(); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$3 = _r$3;
+		_arg$4 = lis;
+		_r$4 = elem.Table(new sliceType([_arg$2, _arg$3, _arg$4])); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_arg$5 = _r$4;
+		_arg$6 = (x$2 = vecty.Markup(new sliceType$1([event.Click($methodVal(mc, "onMore"))])), new x$2.constructor.elem(x$2));
+		_r$5 = vecty.Text("More", new sliceType([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_arg$7 = _r$5;
+		_r$6 = elem.Button(new sliceType([_arg$6, _arg$7])); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_arg$8 = _r$6;
+		_r$7 = elem.Div(new sliceType([_arg$1, _arg$5, _arg$8])); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_arg$9 = _r$7;
+		_r$8 = elem.Div(new sliceType([_arg, _arg$9])); /* */ $s = 11; case 11: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		$s = -1; return _r$8;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MoviesComponent.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._arg$9 = _arg$9; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._ref = _ref; $f.i = i; $f.item = item; $f.lis = lis; $f.mc = mc; $f.v = v; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MoviesComponent.prototype.Render = function() { return this.$val.Render(); };
 	ptrType$3.methods = [{prop: "onLink", name: "onLink", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([ptrType$2], [], false)}, {prop: "onName", name: "onName", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([ptrType$2], [], false)}, {prop: "onSubmit", name: "onSubmit", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([ptrType$2], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [vecty.ComponentOrHTML], false)}];
 	ptrType$4.methods = [{prop: "onLogout", name: "onLogout", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([ptrType$2], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [vecty.ComponentOrHTML], false)}];
-	ptrType$5.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [vecty.ComponentOrHTML], false)}];
+	ptrType$5.methods = [{prop: "renderMoviesTableHead", name: "renderMoviesTableHead", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([], [vecty.ComponentOrHTML], false)}, {prop: "renderMoviesTableRow", name: "renderMoviesTableRow", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([$Int, services.MovieJson], [vecty.ComponentOrHTML], false)}, {prop: "onDeleteMovie", name: "onDeleteMovie", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([$String], [funcType], false)}, {prop: "onMore", name: "onMore", pkg: "github.com/mragiadakos/borinema/admin_panel/components", typ: $funcType([ptrType$2], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [vecty.ComponentOrHTML], false)}];
 	FormMovieComponent.init("github.com/mragiadakos/borinema/admin_panel/components", [{prop: "Core", name: "Core", embedded: true, exported: true, typ: vecty.Core, tag: ""}, {prop: "link", name: "link", embedded: false, exported: false, typ: $String, tag: ""}, {prop: "name", name: "name", embedded: false, exported: false, typ: $String, tag: ""}, {prop: "errStr", name: "errStr", embedded: false, exported: false, typ: $String, tag: ""}]);
 	LogoutComponent.init("", [{prop: "Core", name: "Core", embedded: true, exported: true, typ: vecty.Core, tag: ""}]);
-	MoviesComponent.init("", [{prop: "Core", name: "Core", embedded: true, exported: true, typ: vecty.Core, tag: ""}, {prop: "Movies", name: "Movies", embedded: false, exported: true, typ: sliceType, tag: ""}]);
+	MoviesComponent.init("", [{prop: "Core", name: "Core", embedded: true, exported: true, typ: vecty.Core, tag: ""}, {prop: "Movies", name: "Movies", embedded: false, exported: true, typ: sliceType$3, tag: "vecty:\"prop\""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34521,6 +35127,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/components"] = (function(
 		$r = vecty.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = elem.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = event.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -40939,7 +41546,7 @@ $packages["github.com/mragiadakos/borinema/vendor/marwan.io/vecty-router"] = (fu
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel/pages"] = (function() {
-	var $pkg = {}, $init, actions, components, services, store, vecty, elem, event, router, AdminPage, LoginPage, Router, sliceType, sliceType$1, sliceType$2, ptrType, sliceType$3, ptrType$1, ptrType$2, ptrType$3, ptrType$4;
+	var $pkg = {}, $init, actions, components, services, store, vecty, elem, event, router, AdminPage, LoginPage, Router, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4;
 	actions = $packages["github.com/mragiadakos/borinema/admin_panel/actions"];
 	components = $packages["github.com/mragiadakos/borinema/admin_panel/components"];
 	services = $packages["github.com/mragiadakos/borinema/admin_panel/services"];
@@ -40980,30 +41587,32 @@ $packages["github.com/mragiadakos/borinema/admin_panel/pages"] = (function() {
 	});
 	sliceType = $sliceType(vecty.ComponentOrHTML);
 	sliceType$1 = $sliceType(vecty.MarkupOrChild);
-	sliceType$2 = $sliceType(services.MovieJson);
-	ptrType = $ptrType(services.ErrorMsg);
+	sliceType$2 = $sliceType($String);
 	sliceType$3 = $sliceType(vecty.Applyer);
+	sliceType$4 = $sliceType(services.MovieJson);
+	ptrType = $ptrType(services.ErrorMsg);
 	ptrType$1 = $ptrType(AdminPage);
 	ptrType$2 = $ptrType(vecty.Event);
 	ptrType$3 = $ptrType(LoginPage);
 	ptrType$4 = $ptrType(Router);
 	AdminPage.ptr.prototype.Render = function() {
-		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, _r$4, _r$5, mp, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; mp = $f.mp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _r, _r$1, _r$2, _r$3, _r$4, _r$5, mp, x, x$1, x$2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; mp = $f.mp; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mp = this;
 		_arg = vecty.If(store.IsAdmin, new sliceType([new components.LogoutComponent.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false))]));
 		_r = elem.Break(new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_arg$1 = _r;
-		_r$1 = elem.Div(new sliceType$1([new components.FormMovieComponent.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false), "", "", "")])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_arg$2 = _r$1;
-		_r$2 = elem.Break(new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_arg$3 = _r$2;
-		_r$3 = elem.Div(new sliceType$1([new components.MoviesComponent.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false), store.Movies)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_arg$4 = _r$3;
-		_r$4 = elem.Div(new sliceType$1([_arg, _arg$1, _arg$2, _arg$3, _arg$4])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_arg$2 = (x = vecty.Markup(new sliceType$3([vecty.Class(new sliceType$2(["columns"]))])), new x.constructor.elem(x));
+		_r$1 = elem.Div(new sliceType$1([(x$1 = vecty.Markup(new sliceType$3([vecty.Class(new sliceType$2(["column"])), vecty.Class(new sliceType$2(["is-two-thirds"]))])), new x$1.constructor.elem(x$1)), new components.MoviesComponent.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false), store.Movies)])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg$3 = _r$1;
+		_r$2 = elem.Div(new sliceType$1([(x$2 = vecty.Markup(new sliceType$3([vecty.Class(new sliceType$2(["column"]))])), new x$2.constructor.elem(x$2)), new components.FormMovieComponent.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false), "", "", "")])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$4 = _r$2;
+		_r$3 = elem.Div(new sliceType$1([_arg$2, _arg$3, _arg$4])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$5 = _r$3;
+		_r$4 = elem.Div(new sliceType$1([_arg, _arg$1, _arg$5])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		_r$5 = elem.Body(new sliceType$1([_r$4])); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 		$s = -1; return _r$5;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: AdminPage.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.mp = mp; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AdminPage.ptr.prototype.Render }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.mp = mp; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	AdminPage.prototype.Render = function() { return this.$val.Render(); };
 	LoginPage.ptr.prototype.onPassword = function(event$1) {
@@ -41122,21 +41731,29 @@ $packages["github.com/mragiadakos/borinema/admin_panel/pages"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
-	var $pkg = {}, $init, actions, pages, services, store, vecty, router, ptrType, sliceType, main, SetMovies;
+	var $pkg = {}, $init, json, js, actions, pages, services, store, vecty, router, ptrType, sliceType, ptrType$1, sliceType$1, main, SetMovies, UpdateMovieProgress, EnableWebsocket;
+	json = $packages["encoding/json"];
+	js = $packages["github.com/gopherjs/gopherjs/js"];
 	actions = $packages["github.com/mragiadakos/borinema/admin_panel/actions"];
 	pages = $packages["github.com/mragiadakos/borinema/admin_panel/pages"];
 	services = $packages["github.com/mragiadakos/borinema/admin_panel/services"];
 	store = $packages["github.com/mragiadakos/borinema/admin_panel/store"];
 	vecty = $packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/vecty"];
 	router = $packages["github.com/mragiadakos/borinema/vendor/marwan.io/vecty-router"];
-	ptrType = $ptrType($packages["time"].Time);
+	ptrType = $ptrType($Int64);
 	sliceType = $sliceType(services.MovieJson);
+	ptrType$1 = $ptrType($packages["github.com/mragiadakos/borinema/vendor/github.com/gopherjs/websocket/websocketjs"].WebSocket);
+	sliceType$1 = $sliceType($Uint8);
 	main = function() {
 		var r, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; r = $f.r; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		r = [r];
 		r[0] = new pages.Router.ptr(new vecty.Core.ptr($ifaceNil, $ifaceNil, false, false));
-		$r = vecty.RenderBody(r[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = vecty.SetTitle("Borinema's Admin Page"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = vecty.AddStylesheet("/admin_panel/node_modules/bulma/css/bulma.min.css"); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = vecty.AddStylesheet("/admin_panel/admin_panel.css"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = vecty.RenderBody(r[0]); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		EnableWebsocket();
 		store.Listeners.Add(r[0], (function(r) { return function $b() {
 			var $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -41182,7 +41799,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; ms = $f.ms; mvs = $f.mvs; pag = $f.pag; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			ms = new services.MovieService.ptr();
 			pag = new services.PaginationJson.ptr(ptrType.nil, 0);
-			pag.Limit = -1;
+			pag.Limit = 10;
 			_r = $clone(ms, services.MovieService).GetMovies($clone(pag, services.PaginationJson)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			_tuple = _r;
 			mvs = _tuple[0];
@@ -41192,21 +41809,89 @@ $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
 		}), []);
 	};
 	$pkg.SetMovies = SetMovies;
+	UpdateMovieProgress = function(wsm) {
+		var wsm;
+		$go((function $b() {
+			var $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = store.Dispatch(new actions.SetMovieProgress.ptr(wsm.Id, wsm.Progress, wsm.State, wsm.Filetype)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$s = $s; $f.$r = $r; return $f;
+		}), []);
+	};
+	$pkg.UpdateMovieProgress = UpdateMovieProgress;
+	EnableWebsocket = function() {
+		$go((function() {
+			var _tuple, as, err, wss;
+			wss = new services.WsService.ptr(ptrType$1.nil);
+			as = new services.AuthService.ptr();
+			_tuple = services.NewWsService($clone(as, services.AuthService).GetToken());
+			wss = _tuple[0];
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				console.log(err);
+			}
+			console.log(wss);
+			wss.SetOnMessage((function $b(ev) {
+				var _1, _r, _r$1, _tuple$1, b, err$1, ev, wsd, wsm, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; _r$1 = $f._r$1; _tuple$1 = $f._tuple$1; b = $f.b; err$1 = $f.err$1; ev = $f.ev; wsd = $f.wsd; wsm = $f.wsm; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				wsd = [wsd];
+				console.log("ws message: " + $internalize(ev.data, $String));
+				b = (new sliceType$1($stringToBytes($internalize(ev.data, $String))));
+				wsd[0] = new services.WsData.ptr("", $ifaceNil);
+				_r = json.Unmarshal(b, wsd[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+					_1 = wsd[0].Theme;
+					/* */ if (_1 === ("progress_movie")) { $s = 3; continue; }
+					/* */ $s = 4; continue;
+					/* if (_1 === ("progress_movie")) { */ case 3:
+						_tuple$1 = wss.SerializeProgressMovie($clone(wsd[0], services.WsData));
+						wsm = _tuple$1[0];
+						err$1 = _tuple$1[1];
+						/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 6; continue; }
+						/* */ $s = 7; continue;
+						/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 6:
+							_r$1 = err$1.Error(); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+							console.log("ws error: " + _r$1);
+							$s = -1; return;
+						/* } */ case 7:
+						UpdateMovieProgress($clone(wsm, services.WsProgressMovieJson));
+						$s = 5; continue;
+					/* } else { */ case 4:
+						console.log("ws error: could not find the 'theme' of the ws message.");
+					/* } */ case 5:
+				case 2:
+				$s = -1; return;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._r = _r; $f._r$1 = _r$1; $f._tuple$1 = _tuple$1; $f.b = b; $f.err$1 = err$1; $f.ev = ev; $f.wsd = wsd; $f.wsm = wsm; $f.$s = $s; $f.$r = $r; return $f;
+			}));
+			wss.SetOnClose((function(ev) {
+				var ev;
+				console.log("ws close: " + $internalize(ev.data, $String));
+			}));
+			wss.SetOnOpen((function(ev) {
+				var ev;
+				console.log("ws open: " + $internalize(ev.data, $String));
+			}));
+		}), []);
+	};
+	$pkg.EnableWebsocket = EnableWebsocket;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = actions.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = pages.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = services.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = store.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = vecty.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = router.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ if ($pkg === $mainPkg) { $s = 7; continue; }
-		/* */ $s = 8; continue;
-		/* if ($pkg === $mainPkg) { */ case 7:
-			$r = main(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = json.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = actions.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = pages.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = services.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = store.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = vecty.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = router.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if ($pkg === $mainPkg) { $s = 9; continue; }
+		/* */ $s = 10; continue;
+		/* if ($pkg === $mainPkg) { */ case 9:
+			$r = main(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$mainFinished = true;
-		/* } */ case 8:
+		/* } */ case 10:
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;

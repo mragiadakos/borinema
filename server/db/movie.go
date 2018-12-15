@@ -23,6 +23,10 @@ func (m *MovieState) Scan(value interface{}) error {
 	return nil
 }
 
+func (m *MovieState) String() string {
+	return string(*m)
+}
+
 const (
 	MOVIE_STATE_DOWNLOADING = MovieState("downloading")
 	MOVIE_STATE_ERROR       = MovieState("error")
@@ -31,18 +35,22 @@ const (
 
 type MoveFiletype string
 
-func (n MoveFiletype) Value() (driver.Value, error) {
-	return string(n), nil
+func (mf MoveFiletype) Value() (driver.Value, error) {
+	return string(mf), nil
 }
 
-func (n *MoveFiletype) Scan(value interface{}) error {
+func (mf *MoveFiletype) Scan(value interface{}) error {
 	str, ok := value.([]uint8)
 	if !ok {
-		*n = ""
+		*mf = ""
 		return nil
 	}
-	*n = MoveFiletype(str)
+	*mf = MoveFiletype(str)
 	return nil
+}
+
+func (mf *MoveFiletype) String() string {
+	return string(*mf)
 }
 
 const (

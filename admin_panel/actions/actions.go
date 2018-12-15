@@ -13,3 +13,22 @@ type ToRedirect struct {
 type SetMovies struct {
 	Movies []services.MovieJson
 }
+
+type SetMovieProgress struct {
+	ID       string
+	Progress float64
+	State    string
+	Filetype string
+}
+
+type SetFirstMovieInList struct {
+	Movie services.MovieJson
+}
+
+type RemoveMovieFromList struct {
+	MovieId string
+}
+
+type AppendMoviesToList struct {
+	Movies []services.MovieJson
+}

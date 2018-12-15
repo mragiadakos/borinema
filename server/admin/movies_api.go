@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/cavaliercoder/grab"
@@ -16,7 +17,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
+func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string, wsSend func(*db.DbMovie)) {
 	dbmovie, err := db.GetMovieByUuid(aa.db, uuid)
 	if err != nil {
 		log.Println("Error:", err)
@@ -54,21 +55,26 @@ func (aa *adminApi) startDownloadAndUpdateDB(folder, url, uuid string) {
 		dbmovie.Update(aa.db)
 		return
 	}
-	t := time.NewTicker(500 * time.Millisecond)
-	defer t.Stop()
-
+	t := *time.NewTicker(500 * time.Millisecond)
+	log.Println("starting the loop")
 Loop:
 	for {
 		select {
 		case <-t.C:
 			dbmovie.Progress = 100 * resp.Progress()
 			dbmovie.Update(aa.db)
+			wsSend(dbmovie)
+			log.Println("tick")
 
 		case <-resp.Done:
+			dbmovie.Progress = 100
+			dbmovie.Update(aa.db)
+			wsSend(dbmovie)
 			break Loop
 		}
 	}
 
+	t.Stop()
 	buf, err := ioutil.ReadFile(folder + "/" + uuid)
 	if err != nil {
 		dbmovie.State = db.MOVIE_STATE_ERROR
@@ -76,6 +82,7 @@ Loop:
 		dbmovie.Filetype = db.FILE_TYPE_OTHER
 		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
+		wsSend(dbmovie)
 		return
 	}
 
@@ -86,6 +93,7 @@ Loop:
 		dbmovie.Filetype = db.FILE_TYPE_OTHER
 		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
+		wsSend(dbmovie)
 		return
 	}
 
@@ -96,6 +104,7 @@ Loop:
 		dbmovie.Filetype = db.FILE_TYPE_OTHER
 		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
+		wsSend(dbmovie)
 		return
 	}
 
@@ -113,16 +122,18 @@ Loop:
 		dbmovie.Error = "The link failed with error " + err.Error()
 		log.Println("Error:", dbmovie.Error)
 		dbmovie.Update(aa.db)
+		wsSend(dbmovie)
 		return
 	}
 	dbmovie.State = db.MOVIE_STATE_FINISHED
 
 	dbmovie.Update(aa.db)
+	wsSend(dbmovie)
 
 	log.Printf("Info: Download saved to %v \n", resp.Filename)
 }
 
-func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) DownloadMovieLink(config conf.Configuration, wsSend func(*db.DbMovie)) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		input := MovieFromLinkInput{}
 		c.Bind(&input)
@@ -139,7 +150,7 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 			return movie.ID, err
 		}
 		startDownload := func(url, id string) {
-			go aa.startDownloadAndUpdateDB(config.DownloadFolder, url, id)
+			go aa.startDownloadAndUpdateDB(config.DownloadFolder, url, id, wsSend)
 		}
 		output, errMsg := al.DownloadMovieFromLink(input, createDbEntry, startDownload)
 		if errMsg != nil {
@@ -148,17 +159,18 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration) func(c echo.Con
 		return c.JSON(http.StatusOK, output)
 	}
 }
+
 func (aa *adminApi) serializeMovie(dm db.DbMovie) MovieOutput {
 	gmo := MovieOutput{}
 	gmo.ID = dm.ID
 	gmo.Name = dm.Name
-	gmo.CreatedAt = dm.CreatedAt
+	gmo.CreatedAt = dm.CreatedAt.UnixNano()
 	gmo.Progress = dm.Progress
 	gmo.State = string(dm.State)
 	gmo.Filetype = string(dm.Filetype)
-	gmo.Error = dm.Error
 	return gmo
 }
+
 func (aa *adminApi) GetMovie(config conf.Configuration) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
@@ -183,8 +195,20 @@ func (aa *adminApi) GetMovie(config conf.Configuration) func(c echo.Context) err
 func (aa *adminApi) GetMovies(config conf.Configuration) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		al := AdminLogic{}
+		limitStr := c.QueryParam("limit")
+		lastSeenStr := c.QueryParam("last_seen_date")
+
 		pagination := Pagination{}
-		c.Bind(&pagination)
+		pagination.Limit, _ = strconv.Atoi(limitStr)
+		if pagination.Limit == 0 {
+			pagination.Limit = -1
+		}
+		lastSeen, _ := strconv.Atoi(lastSeenStr)
+		if lastSeen > 0 {
+			t := time.Unix(0, int64(lastSeen))
+			pagination.LastSeenDate = &t
+		}
+		log.Println(pagination)
 		getMoviesDb := func(pagination Pagination) []MovieOutput {
 			dbms, _ := db.GetMoviesByPage(aa.db, pagination.Limit, pagination.LastSeenDate)
 			movies := []MovieOutput{}

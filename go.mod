@@ -13,6 +13,8 @@ require (
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e
 	github.com/gopherjs/vecty v0.0.0-20180525005238-a3bd138280bf
+	github.com/gopherjs/websocket v0.0.0-20170522004412-87ee47603f13
+	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/h2non/filetype v1.0.5
 	github.com/jinzhu/gorm v1.9.1
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
@@ -24,6 +26,7 @@ require (
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
+	github.com/olahol/melody v0.0.0-20180227134253-7bd65910e5ab
 	github.com/oskca/gopherjs-localStorage v0.0.0-20170122101056-45071c7b6b2c
 	github.com/pelletier/go-toml v1.2.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect
