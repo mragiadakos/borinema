@@ -9,6 +9,7 @@ import (
 	"github.com/gopherjs/vecty"
 	h "github.com/gopherjs/vecty/elem"
 	"github.com/gopherjs/vecty/event"
+	"github.com/gopherjs/vecty/prop"
 	"github.com/mragiadakos/borinema/admin_panel/services"
 )
 
@@ -25,6 +26,7 @@ func (mc *MoviesComponent) renderMoviesTableHead() vecty.ComponentOrHTML {
 			h.TableHeader(h.Abbreviation(vecty.Markup(vecty.Attribute("title", "State")), vecty.Text("State"))),
 			h.TableHeader(h.Abbreviation(vecty.Markup(vecty.Attribute("title", "Progress")), vecty.Text("Progress"))),
 			h.TableHeader(h.Abbreviation(vecty.Markup(vecty.Attribute("title", "Delete")), vecty.Text("Delete"))),
+			h.TableHeader(h.Abbreviation(vecty.Markup(vecty.Attribute("title", "Play")), vecty.Text("Play"))),
 		),
 	)
 }
@@ -40,7 +42,14 @@ func (mc *MoviesComponent) renderMoviesTableRow(index int, movie services.MovieJ
 			vecty.Markup(
 				event.Click(mc.onDeleteMovie(movie.ID)),
 			),
-			vecty.Text("Delete"))),
+			vecty.Text("x"))),
+		h.TableData(h.Input(
+			vecty.Markup(
+				prop.Type(prop.TypeCheckbox),
+				prop.Checked(movie.Selected),
+				event.Change(mc.onSelectingMovie(movie.ID, movie.Selected)),
+			),
+		)),
 	)
 }
 
@@ -50,6 +59,26 @@ func (mc *MoviesComponent) onDeleteMovie(id string) func(e *vecty.Event) {
 			ms := services.MovieService{}
 			ms.DeleteMovie(id)
 			store.Dispatch(&actions.RemoveMovieFromList{MovieId: id})
+		}()
+	}
+}
+
+func (mc *MoviesComponent) onSelectingMovie(id string, selected bool) func(e *vecty.Event) {
+	return func(e *vecty.Event) {
+		go func() {
+			ms := services.MovieService{}
+			if selected {
+				err := ms.RemoveMovieSelection()
+				if err != nil {
+					println("Error: " + err.Error)
+				}
+			} else {
+				err := ms.SelectMovie(id)
+				if err != nil {
+					println("Error: " + err.Error)
+				}
+			}
+			store.Dispatch(&actions.SelectMovieFromList{ID: id, IsSelected: !selected})
 		}()
 	}
 }

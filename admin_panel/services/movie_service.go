@@ -56,6 +56,7 @@ type MovieJson struct {
 	Progress  float64 `json:"progress"`
 	State     string  `json:"state"`
 	Filetype  string  `json:"filetype"`
+	Selected  bool    `json:"selected"`
 	CreatedAt int64   `json:"created_at"`
 }
 
@@ -122,7 +123,7 @@ func (ms MovieService) GetMovie(id string) (*MovieJson, *ErrorMsg) {
 func (ms MovieService) DeleteMovie(id string) *ErrorMsg {
 	as := AuthService{}
 	token := as.GetToken()
-	req := xhr.NewRequest("DELETe", "/api/admin/movies/"+id)
+	req := xhr.NewRequest("DELETE", "/api/admin/movies/"+id)
 	req.SetRequestHeader("Content-Type", "application/json")
 	req.SetRequestHeader("Authorization", "Bearer "+token)
 	err := req.Send(nil)
@@ -144,7 +145,7 @@ func (ms MovieService) DeleteMovie(id string) *ErrorMsg {
 func (ms MovieService) RemoveMovieSelection() *ErrorMsg {
 	as := AuthService{}
 	token := as.GetToken()
-	req := xhr.NewRequest("DELETe", "/api/admin/movies/selected")
+	req := xhr.NewRequest("DELETE", "/api/admin/movies/selected")
 	req.SetRequestHeader("Content-Type", "application/json")
 	req.SetRequestHeader("Authorization", "Bearer "+token)
 	err := req.Send(nil)
@@ -166,7 +167,7 @@ func (ms MovieService) RemoveMovieSelection() *ErrorMsg {
 func (ms MovieService) SelectMovie(id string) *ErrorMsg {
 	as := AuthService{}
 	token := as.GetToken()
-	req := xhr.NewRequest("DELETe", "/api/admin/movies/"+id+"/select")
+	req := xhr.NewRequest("PUT", "/api/admin/movies/"+id+"/select")
 	req.SetRequestHeader("Content-Type", "application/json")
 	req.SetRequestHeader("Authorization", "Bearer "+token)
 	err := req.Send(nil)

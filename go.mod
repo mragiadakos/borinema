@@ -40,6 +40,7 @@ require (
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/h2non/filetype.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v2 v2.2.1 // indirect
+	honnef.co/go/js/dom v0.0.0-20181202134054-9dbdcd412bde
 	honnef.co/go/js/util v0.0.0-20150216223935-96b8dd9d1621 // indirect
 	honnef.co/go/js/xhr v0.0.0-20150307031022-00e3346113ae
 	marwan.io/vecty-router v0.0.0-20181110152148-5075cac31a8e

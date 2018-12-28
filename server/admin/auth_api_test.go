@@ -36,7 +36,7 @@ func TestAdminAuthorizationSuccess(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	aa := adminApi{}
-	if assert.NoError(t, aa.Login(config)(c)) {
+	if assert.NoError(t, aa.Login()(c)) {
 		assert.Equal(t, http.StatusAccepted, rec.Code)
 		sa := AuthorizeAdminOutput{}
 		err := json.Unmarshal(rec.Body.Bytes(), &sa)

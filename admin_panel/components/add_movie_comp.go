@@ -9,22 +9,22 @@ import (
 	"github.com/mragiadakos/borinema/admin_panel/store"
 )
 
-type FormMovieComponent struct {
+type AddMovieComponent struct {
 	vecty.Core
 	link   string
 	name   string
 	errStr string
 }
 
-func (fmc *FormMovieComponent) onLink(event *vecty.Event) {
+func (fmc *AddMovieComponent) onLink(event *vecty.Event) {
 	fmc.link = event.Target.Get("value").String()
 }
 
-func (fmc *FormMovieComponent) onName(event *vecty.Event) {
+func (fmc *AddMovieComponent) onName(event *vecty.Event) {
 	fmc.name = event.Target.Get("value").String()
 }
 
-func (fmc *FormMovieComponent) onSubmit(event *vecty.Event) {
+func (fmc *AddMovieComponent) onSubmit(event *vecty.Event) {
 	go func() {
 		ms := services.MovieService{}
 		amj := services.AddMovieJson{}
@@ -47,7 +47,7 @@ func (fmc *FormMovieComponent) onSubmit(event *vecty.Event) {
 	}()
 }
 
-func (fmc *FormMovieComponent) Render() vecty.ComponentOrHTML {
+func (fmc *AddMovieComponent) Render() vecty.ComponentOrHTML {
 	return h.Div(
 		h.Heading4(vecty.Text("Upload movie")),
 		h.Span(vecty.Text("Name:")),

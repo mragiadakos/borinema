@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	IsAdmin     = false
-	CurrentPage = actions.PAGE_NOTHING
-	Movies      = []services.MovieJson{}
+	IsAdmin                           = false
+	CurrentPage                       = actions.PAGE_NOTHING
+	Movies                            = []services.MovieJson{}
+	SelectedMovie *services.MovieJson = nil
 )
 var Listeners = NewListenerRegistry()
 
@@ -25,6 +26,16 @@ func findMoviesIndex(movies []services.MovieJson, id string) int {
 	}
 	return index
 }
+
+func getSelectedMovie(movies []services.MovieJson) *services.MovieJson {
+	for _, v := range movies {
+		if v.Selected {
+			return &v
+		}
+	}
+	return nil
+}
+
 func onAction(action interface{}) {
 	println(action)
 	switch a := action.(type) {
@@ -34,19 +45,38 @@ func onAction(action interface{}) {
 		CurrentPage = a.ToRedirect
 	case *actions.SetMovies:
 		Movies = a.Movies
+		SelectedMovie = getSelectedMovie(Movies)
 	case *actions.SetFirstMovieInList:
 		Movies = append([]services.MovieJson{a.Movie}, Movies...)
+		SelectedMovie = getSelectedMovie(Movies)
 	case *actions.RemoveMovieFromList:
 		index := findMoviesIndex(Movies, a.MovieId)
 		Movies = append(Movies[:index], Movies[index+1:]...)
+		SelectedMovie = getSelectedMovie(Movies)
 	case *actions.AppendMoviesToList:
 		Movies = append(Movies, a.Movies...)
-
+		SelectedMovie = getSelectedMovie(Movies)
 	case *actions.SetMovieProgress:
 		index := findMoviesIndex(Movies, a.ID)
 		Movies[index].Progress = a.Progress
 		Movies[index].State = a.State
 		Movies[index].Filetype = a.Filetype
+	case *actions.SelectMovieFromList:
+		index := findMoviesIndex(Movies, a.ID)
+		Movies[index].Selected = a.IsSelected
+		if a.IsSelected {
+			selectedMovie := Movies[index]
+			SelectedMovie = &selectedMovie
+		} else {
+			SelectedMovie = nil
+		}
+		if a.IsSelected {
+			for i, v := range Movies {
+				if v.Selected && v.ID != a.ID {
+					Movies[i].Selected = false
+				}
+			}
+		}
 	default:
 		return
 	}

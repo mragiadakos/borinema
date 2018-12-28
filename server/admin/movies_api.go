@@ -12,7 +12,6 @@ import (
 	"github.com/cavaliercoder/grab"
 	"github.com/h2non/filetype"
 	"github.com/labstack/echo"
-	"github.com/mragiadakos/borinema/server/conf"
 	"github.com/mragiadakos/borinema/server/db"
 	uuid "github.com/satori/go.uuid"
 )
@@ -133,7 +132,7 @@ Loop:
 	log.Printf("Info: Download saved to %v \n", resp.Filename)
 }
 
-func (aa *adminApi) DownloadMovieLink(config conf.Configuration, wsSend func(*db.DbMovie)) func(c echo.Context) error {
+func (aa *adminApi) DownloadMovieLink(wsSend func(*db.DbMovie)) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		input := MovieFromLinkInput{}
 		c.Bind(&input)
@@ -150,7 +149,7 @@ func (aa *adminApi) DownloadMovieLink(config conf.Configuration, wsSend func(*db
 			return movie.ID, err
 		}
 		startDownload := func(url, id string) {
-			go aa.startDownloadAndUpdateDB(config.DownloadFolder, url, id, wsSend)
+			go aa.startDownloadAndUpdateDB(aa.config.DownloadFolder, url, id, wsSend)
 		}
 		output, errMsg := al.DownloadMovieFromLink(input, createDbEntry, startDownload)
 		if errMsg != nil {
@@ -168,10 +167,11 @@ func (aa *adminApi) serializeMovie(dm db.DbMovie) MovieOutput {
 	gmo.Progress = dm.Progress
 	gmo.State = string(dm.State)
 	gmo.Filetype = string(dm.Filetype)
+	gmo.Selected = dm.Selected
 	return gmo
 }
 
-func (aa *adminApi) GetMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) GetMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
 		log.Println("ID get movie " + uuid)
@@ -192,7 +192,7 @@ func (aa *adminApi) GetMovie(config conf.Configuration) func(c echo.Context) err
 	}
 }
 
-func (aa *adminApi) GetMovies(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) GetMovies() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		al := AdminLogic{}
 		limitStr := c.QueryParam("limit")
@@ -226,11 +226,11 @@ func (aa *adminApi) GetMovies(config conf.Configuration) func(c echo.Context) er
 	}
 }
 
-func (aa *adminApi) DeleteMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) DeleteMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
 		al := AdminLogic{}
-		errMsg := al.DeleteMovie(uuid, aa.movieExists, aa.deleteMovie(config))
+		errMsg := al.DeleteMovie(uuid, aa.movieExists, aa.deleteMovie())
 		if errMsg != nil {
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
@@ -238,7 +238,7 @@ func (aa *adminApi) DeleteMovie(config conf.Configuration) func(c echo.Context) 
 	}
 }
 
-func (aa *adminApi) UpdateMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) UpdateMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
 		input := UpdateMovieInput{}
@@ -252,7 +252,7 @@ func (aa *adminApi) UpdateMovie(config conf.Configuration) func(c echo.Context) 
 	}
 }
 
-func (aa *adminApi) SelectMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) SelectMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
 		al := AdminLogic{}
@@ -265,7 +265,7 @@ func (aa *adminApi) SelectMovie(config conf.Configuration) func(c echo.Context) 
 	}
 }
 
-func (aa *adminApi) SelectedMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) SelectedMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		getSelectedMovieDb := func() (*MovieOutput, error) {
 			dm, err := db.GetMovieBySelected(aa.db)
@@ -284,7 +284,7 @@ func (aa *adminApi) SelectedMovie(config conf.Configuration) func(c echo.Context
 	}
 }
 
-func (aa *adminApi) RemoveAnySelectedMovie(config conf.Configuration) func(c echo.Context) error {
+func (aa *adminApi) RemoveAnySelectedMovie() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		removeSelectedMovieDb := func() error {
 			dm, err := db.GetMovieBySelected(aa.db)
@@ -332,13 +332,13 @@ func (aa *adminApi) selectMovie(id string) error {
 	return dbm.Update(aa.db)
 }
 
-func (aa *adminApi) deleteMovie(config conf.Configuration) func(id string) error {
+func (aa *adminApi) deleteMovie() func(id string) error {
 	return func(id string) error {
 		dbm, err := db.GetMovieByUuid(aa.db, id)
 		if err != nil {
 			return err
 		}
-		os.Remove(config.DownloadFolder + "/" + id)
+		os.Remove(aa.config.DownloadFolder + "/" + id)
 		return dbm.Delete(aa.db)
 	}
 }

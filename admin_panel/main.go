@@ -15,7 +15,6 @@ func main() {
 	vecty.AddStylesheet("/admin_panel/node_modules/bulma/css/bulma.min.css")
 	vecty.AddStylesheet("/admin_panel/admin_panel.css")
 	vecty.RenderBody(r)
-
 	EnableWebsocket()
 	store.Listeners.Add(r, func() {
 		if len(store.CurrentPage) > 0 {

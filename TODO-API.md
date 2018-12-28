@@ -2,7 +2,7 @@
 
 ## API for the Movies
 
-### POST /api/admin/login
+### POST /api/admin/login (/)
 REQ
 {
     username
@@ -12,7 +12,7 @@ RESP
     202 success
     401 failure
 
-### GET /api/admin/movies
+### GET /api/admin/movies (/)
 Req {
     last_seen_date
     limit
@@ -24,7 +24,7 @@ RESP
     duration
 }
 
-### GET /api/admin/movies/:id
+### GET /api/admin/movies/:id (/)
 RESP
 200 {
     ID
@@ -33,13 +33,13 @@ RESP
 }
 404
 
-### DELETE /api/admin/movies/:id
+### DELETE /api/admin/movies/:id (/)
 RESP
 204
 404
 
 
-### POST /api/admin/movies/link
+### POST /api/admin/movies/link (/)
 REQ 
 {
 
@@ -51,7 +51,7 @@ RESP
 401
 500
 
-### PUT /api/admin/movies/:id
+### PUT /api/admin/movies/:id (/)
 REQ
 {
     name
@@ -63,7 +63,12 @@ RESP
 }
 404
 
-### PUT /api/admin/movies/:id/select
+### PUT /api/admin/movies/:id/select (/)
+RESP
+204
+404
+
+### DELETE /api/admin/movies/selected (/)
 RESP
 204
 404
@@ -92,6 +97,34 @@ RESP
 204
 404 
 500
+
+
+### GET /api/cinema/movie
+RESP 
+200 - with the movie
+404 - there is not any movie selected yet
+
+
+### GET /api/cinema/movie/info
+RESP 
+200 - with the movie
+404 - there is not any movie selected yet
+
+## Websocket API
+### GET /api/admin/ws
+- Send (to admin) Progress of movie 'download_progress_movie'
+- Send (to admin) Movie has been selected 'new_selected_movie'
+- Receive (from admin) start of movie 'start_movie'
+- Receive (from admin) stop the movie 'stop_movie'
+- Receive (from admin) pause the movie 'pause_movie'
+- Receive (from admin) change the time 'change_time_movie'
+
+### GET /api/ws
+- Send (to user) a movie has been selected 'new_selected_movie'
+- Send (to user) start of movie 'start_movie'
+- Send (to user) stop the movie 'stop_movie'
+- Send (to user) pause the movie 'pause_movie'
+- Send (to user) change the time 'change_time_movie'
 
 ## API for configuration
 ### GET /api/config

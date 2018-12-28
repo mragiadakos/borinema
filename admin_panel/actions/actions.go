@@ -21,6 +21,10 @@ type SetMovieProgress struct {
 	Filetype string
 }
 
+type SelectMovieFromList struct {
+	ID         string
+	IsSelected bool
+}
 type SetFirstMovieInList struct {
 	Movie services.MovieJson
 }

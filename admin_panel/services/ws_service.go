@@ -3,6 +3,8 @@ package services
 import (
 	"errors"
 
+	"honnef.co/go/js/dom"
+
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/websocket/websocketjs"
 )
@@ -13,7 +15,8 @@ type WsService struct {
 
 func NewWsService(token string) (*WsService, error) {
 	wss := &WsService{}
-	ws, err := websocketjs.New("ws://localhost:8080/api/admin/ws?token=" + token)
+	host := dom.GetWindow().Location().Host
+	ws, err := websocketjs.New("ws://" + host + "/api/admin/ws?token=" + token)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +26,7 @@ func NewWsService(token string) (*WsService, error) {
 }
 
 const (
-	WS_THEME_PROGRESS_MOVIE = "progress_movie"
+	WS_THEME_DOWNLOAD_PROGRESS_MOVIE = "download_progress_movie"
 )
 
 type WsData struct {

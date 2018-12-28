@@ -53,7 +53,7 @@ func (wa *adminWsApi) onConnection(s *melody.Session) {
 type WsTheme string
 
 const (
-	WS_THEME_PROGRESS_MOVIE = WsTheme("progress_movie")
+	WS_THEME_DOWNLOAD_PROGRESS_MOVIE = WsTheme("download_progress_movie")
 )
 
 type WsData struct {
@@ -77,7 +77,7 @@ func (wa *adminWsApi) SendProgressOfMovie(dbm *db.DbMovie) {
 		wp.State = dbm.State.String()
 		wp.Filetype = dbm.Filetype.String()
 		wd := WsData{
-			Theme: WS_THEME_PROGRESS_MOVIE,
+			Theme: WS_THEME_DOWNLOAD_PROGRESS_MOVIE,
 			Data:  wp,
 		}
 		b, _ := json.Marshal(wd)

@@ -12,6 +12,7 @@ type AdminPage struct {
 }
 
 func (mp *AdminPage) Render() vecty.ComponentOrHTML {
+
 	return h.Body(
 		h.Div(
 			vecty.If(store.IsAdmin,
@@ -26,7 +27,10 @@ func (mp *AdminPage) Render() vecty.ComponentOrHTML {
 
 				h.Div(
 					vecty.Markup(vecty.Class("column")),
-					&components.FormMovieComponent{}),
+					&components.AddMovieComponent{},
+					h.Break(),
+					&components.PlayMovieComponent{},
+				),
 			),
 		),
 	)

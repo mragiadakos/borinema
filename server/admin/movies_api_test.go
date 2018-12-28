@@ -35,9 +35,9 @@ func TestDownloadMovieLinkApiSuccess(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	aa := NewAdminApi(dbtx)
-	fakeWs := func(a string, c float64) {}
-	aa.DownloadMovieLink(config, fakeWs)(c)
+	aa := NewAdminApi(dbtx, config)
+	fakeWs := func(dbm *db.DbMovie) {}
+	aa.DownloadMovieLink(fakeWs)(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
 
 	// check if the movie exists in the DB
@@ -77,9 +77,9 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	aa := NewAdminApi(dbtx)
-	fakeWs := func(a string, c float64) {}
-	aa.DownloadMovieLink(config, fakeWs)(c)
+	aa := NewAdminApi(dbtx, config)
+	fakeWs := func(dbm *db.DbMovie) {}
+	aa.DownloadMovieLink(fakeWs)(c)
 	output := MovieFromLinkOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &output)
 
@@ -91,7 +91,7 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	c.SetPath("/api/admin/movies/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(output.ID)
-	aa.GetMovie(config)(c)
+	aa.GetMovie()(c)
 	mout := &MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mout)
 	assert.Equal(t, output.ID, mout.ID)
@@ -107,7 +107,7 @@ func TestGetMovieApiSuccess(t *testing.T) {
 	c.SetPath("/api/admin/movies/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(output.ID)
-	aa.GetMovie(config)(c)
+	aa.GetMovie()(c)
 	mout = &MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mout)
 	assert.Equal(t, output.ID, mout.ID)
@@ -134,7 +134,7 @@ func TestGetMoviesSuccess(t *testing.T) {
 		ms = append(ms, m)
 	}
 
-	aa := NewAdminApi(dbtx)
+	aa := NewAdminApi(dbtx, config)
 	input := Pagination{
 		Limit: 2,
 	}
@@ -144,7 +144,7 @@ func TestGetMoviesSuccess(t *testing.T) {
 	rec := httptest.NewRecorder()
 	e := echo.New()
 	c := e.NewContext(req, rec)
-	aa.GetMovies(config)(c)
+	aa.GetMovies()(c)
 	mouts := []MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mouts)
 	assert.Equal(t, 2, len(mouts))
@@ -160,7 +160,7 @@ func TestGetMoviesSuccess(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	aa.GetMovies(config)(c)
+	aa.GetMovies()(c)
 	mouts = []MovieOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &mouts)
 	assert.Equal(t, 2, len(mouts))
@@ -186,7 +186,7 @@ func TestDeleteMovieSuccess(t *testing.T) {
 		time.Sleep(1 * time.Second)
 		ms = append(ms, m)
 	}
-	aa := NewAdminApi(dbtx)
+	aa := NewAdminApi(dbtx, config)
 	for _, v := range ms[2:] {
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -196,7 +196,7 @@ func TestDeleteMovieSuccess(t *testing.T) {
 		c.SetPath("/api/admin/movies/:id")
 		c.SetParamNames("id")
 		c.SetParamValues(v.ID)
-		aa.DeleteMovie(config)(c)
+		aa.DeleteMovie()(c)
 		assert.Equal(t, http.StatusNoContent, rec.Code)
 	}
 	mouts, _ := db.GetMoviesByPage(dbtx, -1, nil)
@@ -224,9 +224,9 @@ func TestUpdateMovieSuccess(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	fakeWs := func(a string, c float64) {}
-	aa := NewAdminApi(dbtx)
-	aa.DownloadMovieLink(config, fakeWs)(c)
+	fakeWs := func(dbm *db.DbMovie) {}
+	aa := NewAdminApi(dbtx, config)
+	aa.DownloadMovieLink(fakeWs)(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
 	output := MovieFromLinkOutput{}
 	json.Unmarshal(rec.Body.Bytes(), &output)
@@ -241,7 +241,7 @@ func TestUpdateMovieSuccess(t *testing.T) {
 	c.SetPath("/api/admin/movies/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(output.ID)
-	aa.UpdateMovie(config)(c)
+	aa.UpdateMovie()(c)
 	assert.Equal(t, http.StatusNoContent, rec.Code)
 
 	// get movie
@@ -258,7 +258,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	os.MkdirAll(config.DownloadFolder, 0777)
 	e := echo.New()
-	aa := NewAdminApi(dbtx)
+	aa := NewAdminApi(dbtx, config)
 
 	uuids := []string{}
 	// add two movies
@@ -272,8 +272,8 @@ func TestSelectMovieSuccess(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		fakeWs := func(a string, c float64) {}
-		aa.DownloadMovieLink(config, fakeWs)(c)
+		fakeWs := func(dbm *db.DbMovie) {}
+		aa.DownloadMovieLink(fakeWs)(c)
 		assert.Equal(t, http.StatusOK, rec.Code)
 		output := MovieFromLinkOutput{}
 		json.Unmarshal(rec.Body.Bytes(), &output)
@@ -288,7 +288,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	c.SetPath("/api/admin/movies/:id/select")
 	c.SetParamNames("id")
 	c.SetParamValues(uuids[0])
-	aa.SelectMovie(config)(c)
+	aa.SelectMovie()(c)
 	assert.Equal(t, http.StatusNoContent, rec.Code)
 
 	dbm, err := db.GetMovieByUuid(dbtx, uuids[0])
@@ -306,7 +306,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	c.SetPath("/api/admin/movies/:id/select")
 	c.SetParamNames("id")
 	c.SetParamValues(uuids[1])
-	aa.SelectMovie(config)(c)
+	aa.SelectMovie()(c)
 	assert.Equal(t, http.StatusNoContent, rec.Code)
 
 	dbm, err = db.GetMovieByUuid(dbtx, uuids[1])
@@ -322,7 +322,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
 	c.SetPath("/api/admin/movies/selected")
-	aa.SelectedMovie(config)(c)
+	aa.SelectedMovie()(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
 
 	mout := &MovieOutput{}
@@ -335,7 +335,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
 	c.SetPath("/api/admin/movies/selected")
-	aa.RemoveAnySelectedMovie(config)(c)
+	aa.RemoveAnySelectedMovie()(c)
 	assert.Equal(t, http.StatusNoContent, rec.Code)
 
 	// get selected movie, but dont find any
@@ -344,7 +344,7 @@ func TestSelectMovieSuccess(t *testing.T) {
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
 	c.SetPath("/api/admin/movies/selected")
-	aa.SelectedMovie(config)(c)
+	aa.SelectedMovie()(c)
 	assert.Equal(t, http.StatusNotFound, rec.Code)
 
 	// check that all are false

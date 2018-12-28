@@ -47,7 +47,7 @@ func EnableWebsocket() {
 			wsd := services.WsData{}
 			json.Unmarshal(b, &wsd)
 			switch wsd.Theme {
-			case services.WS_THEME_PROGRESS_MOVIE:
+			case services.WS_THEME_DOWNLOAD_PROGRESS_MOVIE:
 				wsm, err := wss.SerializeProgressMovie(wsd)
 				if err != nil {
 					println("ws error: " + err.Error())

@@ -60,6 +60,7 @@ type MovieOutput struct {
 	Progress  float64 `json:"progress"`
 	State     string  `json:"state"`
 	Filetype  string  `json:"filetype"`
+	Selected  bool    `json:"selected"`
 	CreatedAt int64   `json:"created_at"`
 }
 

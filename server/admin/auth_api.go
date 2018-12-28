@@ -10,12 +10,14 @@ import (
 )
 
 type adminApi struct {
-	db *gorm.DB
+	db     *gorm.DB
+	config conf.Configuration
 }
 
-func NewAdminApi(db *gorm.DB) *adminApi {
+func NewAdminApi(db *gorm.DB, config conf.Configuration) *adminApi {
 	aa := &adminApi{}
 	aa.db = db
+	aa.config = config
 	return aa
 }
 
@@ -29,15 +31,15 @@ func (aa *adminApi) AuthorizeAdminMiddleware(next echo.HandlerFunc) echo.Handler
 	}
 }
 
-func (aa *adminApi) Login(config conf.Configuration) func(echo.Context) error {
+func (aa *adminApi) Login() func(echo.Context) error {
 	return func(c echo.Context) error {
 		opts := AuthorizationAdminInput{}
 		c.Bind(&opts)
 		isValid := func(opts AuthorizationAdminInput) bool {
-			return config.AdminUsername == opts.Username && config.AdminPassword == opts.Password
+			return aa.config.AdminUsername == opts.Username && aa.config.AdminPassword == opts.Password
 		}
 		al := AdminLogic{}
-		sa, errMsg := al.AuthorizeAdmin(opts, isValid, utils.GetTokenAdmin(config))
+		sa, errMsg := al.AuthorizeAdmin(opts, isValid, utils.GetTokenAdmin(aa.config))
 		if errMsg != nil {
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
