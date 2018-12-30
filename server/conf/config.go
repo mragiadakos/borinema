@@ -58,5 +58,6 @@ func GetConfigurations(path string) (*Configuration, error) {
 	} else {
 		newConf.DatabaseFile = "bonirema.db"
 	}
+	println("read confs")
 	return &newConf, nil
 }

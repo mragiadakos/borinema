@@ -103,7 +103,6 @@ func (mc *MoviesComponent) Render() vecty.ComponentOrHTML {
 		item := mc.renderMoviesTableRow(i, v)
 		lis = append(lis, item)
 	}
-	println("render")
 	return h.Div(
 		h.Heading1(vecty.Text("Movies")),
 		h.Div(

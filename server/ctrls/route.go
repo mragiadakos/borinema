@@ -15,27 +15,30 @@ import (
 
 func Run(config conf.Configuration) {
 	r := echo.New()
-
 	db, err := db.NewDB(config.DatabaseFile)
 	if err != nil {
 		log.Fatal("Error: " + err.Error())
 	}
+
 	err = os.MkdirAll(config.DownloadFolder, 0770)
 	if err != nil {
 		log.Fatal("Error: " + err.Error())
 	}
 
+	cp := utils.NewCommonMoviePlayer()
 	aa := admin.NewAdminApi(db, config)
-	wa := admin.NewAdminWsApi()
+	wa := admin.NewAdminWsApi(config, cp)
+	wc := cinema.NewCinemaWsApi(cp)
 	cma := cinema.NewCinemaMovieApi(db, config)
-	
+
 	r.POST("/api/login", aa.Login())
-	r.GET("/api/admin/ws", wa.HttpFunc(config))
+	r.GET("/api/admin/ws", wa.HttpFunc())
+	r.GET("/api/player/ws", wc.HttpFunc())
 
 	cinemaGroup := r.Group("/api/cinema")
-	cinemaGroup.GET("/movie/:id",cma.GetMovie())
+	cinemaGroup.GET("/movie/:id", cma.GetMovie())
 	cinemaGroup.GET("/movie/info", cma.GetMovieInfo())
-	
+
 	adminGroup := r.Group("/api/admin")
 	jwtConfig := middleware.JWTConfig{
 		Claims:     &utils.JwtCustomClaims{},
@@ -45,7 +48,7 @@ func Run(config conf.Configuration) {
 	adminGroup.Use(aa.AuthorizeAdminMiddleware)
 
 	adminGroup.GET("/isAdmin", aa.IsAdmin())
-	adminGroup.POST("/movies/link", aa.DownloadMovieLink( wa.SendProgressOfMovie))
+	adminGroup.POST("/movies/link", aa.DownloadMovieLink(wa.SendProgressOfMovie))
 	adminGroup.GET("/movies/selected", aa.SelectedMovie())
 	adminGroup.DELETE("/movies/selected", aa.RemoveAnySelectedMovie())
 	adminGroup.GET("/movies/:id", aa.GetMovie())

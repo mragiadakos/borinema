@@ -1,10 +1,10 @@
 package components
 
 import (
-	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/vecty"
 	h "github.com/gopherjs/vecty/elem"
 	"github.com/gopherjs/vecty/event"
+	"github.com/mragiadakos/borinema/admin_panel/services"
 	"github.com/mragiadakos/borinema/admin_panel/store"
 )
 
@@ -13,19 +13,18 @@ type PlayMovieComponent struct {
 }
 
 func (pmc *PlayMovieComponent) onPlay(event *vecty.Event) {
-	video := js.Global.Get("document").Call("getElementById", "media-video")
-	video.Call("play")
+	wss := services.WsService{}
+	wss.SendMoviePlayerActionToAdmin(services.PLAY)
 }
 
 func (pmc *PlayMovieComponent) onPause(event *vecty.Event) {
-	video := js.Global.Get("document").Call("getElementById", "media-video")
-	video.Call("pause")
+	wss := services.WsService{}
+	wss.SendMoviePlayerActionToAdmin(services.PAUSE)
 }
 
 func (pmc *PlayMovieComponent) onStop(event *vecty.Event) {
-	video := js.Global.Get("document").Call("getElementById", "media-video")
-	video.Call("pause")
-	video.Set("currentTime", 0)
+	wss := services.WsService{}
+	wss.SendMoviePlayerActionToAdmin(services.STOP)
 }
 
 func (pmc *PlayMovieComponent) Render() vecty.ComponentOrHTML {

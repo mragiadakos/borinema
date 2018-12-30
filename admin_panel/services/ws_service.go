@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 
 	"honnef.co/go/js/dom"
@@ -9,24 +10,33 @@ import (
 	"github.com/gopherjs/websocket/websocketjs"
 )
 
-type WsService struct {
-	ws *websocketjs.WebSocket
-}
+var AdminWs *websocketjs.WebSocket
+var PlayerWs *websocketjs.WebSocket
 
-func NewWsService(token string) (*WsService, error) {
-	wss := &WsService{}
+type WsService struct{}
+
+func init() {
+	as := AuthService{}
 	host := dom.GetWindow().Location().Host
-	ws, err := websocketjs.New("ws://" + host + "/api/admin/ws?token=" + token)
+	adminWs, err := websocketjs.New("ws://" + host + "/api/admin/ws?token=" + as.GetToken())
 	if err != nil {
-		return nil, err
+		println("Error for admin WS :" + err.Error())
+		return
 	}
-	wss.ws = ws
+	AdminWs = adminWs
 
-	return wss, nil
+	playerWs, err := websocketjs.New("ws://" + host + "/api/player/ws")
+	if err != nil {
+		println("Error for player WS :" + err.Error())
+		return
+	}
+	PlayerWs = playerWs
+
 }
 
 const (
 	WS_THEME_DOWNLOAD_PROGRESS_MOVIE = "download_progress_movie"
+	WS_THEME_PLAYER_ACTION           = "player_action"
 )
 
 type WsData struct {
@@ -66,14 +76,67 @@ func (wss *WsService) SerializeProgressMovie(data WsData) (*WsProgressMovieJson,
 	return &wpm, nil
 }
 
-func (wss *WsService) SetOnMessage(f func(ev *js.Object)) {
-	wss.ws.AddEventListener("message", false, f)
+func (wss *WsService) SerializeMovieAction(data WsData) (*MoviePlayerAction, error) {
+	jm, ok := data.Data.(map[string]interface{})
+	if !ok {
+		return nil, errors.New("The 'data' is not type of map[string]interface ")
+	}
+
+	mpa := MoviePlayerAction{}
+	action, ok := jm["action"].(string)
+	if !ok {
+		return nil, errors.New("The 'data' is missing the key 'action' ")
+	}
+	mpa.Action = MoviePlayerActionType(action)
+	return &mpa, nil
 }
 
-func (wss *WsService) SetOnOpen(f func(ev *js.Object)) {
-	wss.ws.AddEventListener("open", false, f)
+func (wss *WsService) SetAdminWsOnMessage(f func(ev *js.Object)) {
+	AdminWs.AddEventListener("message", false, f)
 }
 
-func (wss *WsService) SetOnClose(f func(ev *js.Object)) {
-	wss.ws.AddEventListener("close", false, f)
+func (wss *WsService) SetPlayerWsOnMessage(f func(ev *js.Object)) {
+	PlayerWs.AddEventListener("message", false, f)
+}
+
+func (wss *WsService) SetAdminWsOnOpen(f func(ev *js.Object)) {
+	AdminWs.AddEventListener("open", false, f)
+}
+
+func (wss *WsService) SetPlayerWsOnOpen(f func(ev *js.Object)) {
+	PlayerWs.AddEventListener("open", false, f)
+}
+
+func (wss *WsService) SetAdminWsOnClose(f func(ev *js.Object)) {
+	AdminWs.AddEventListener("close", false, f)
+}
+
+func (wss *WsService) SetPlayerWsOnClose(f func(ev *js.Object)) {
+	PlayerWs.AddEventListener("close", false, f)
+}
+
+type MoviePlayerActionType string
+
+type MoviePlayerAction struct {
+	Action MoviePlayerActionType `json:"action"`
+}
+
+const (
+	PLAY  = MoviePlayerActionType("play")
+	STOP  = MoviePlayerActionType("stop")
+	PAUSE = MoviePlayerActionType("pause")
+)
+
+func (wss *WsService) SendMoviePlayerActionToAdmin(action MoviePlayerActionType) {
+	mpa := MoviePlayerAction{Action: action}
+	wd := WsData{
+		Theme: WS_THEME_PLAYER_ACTION,
+		Data:  mpa,
+	}
+	b, _ := json.Marshal(wd)
+	println("sended " + string(b))
+	err := AdminWs.Send(string(b))
+	if err != nil {
+		println("Error: " + err.Error())
+	}
 }

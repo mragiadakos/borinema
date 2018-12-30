@@ -35,14 +35,8 @@ func UpdateMovieProgress(wsm services.WsProgressMovieJson) {
 func EnableWebsocket() {
 	go func() {
 		wss := &services.WsService{}
-		as := services.AuthService{}
-		wss, err := services.NewWsService(as.GetToken())
-		if err != nil {
-			println(err)
-		}
-		println(wss)
-		wss.SetOnMessage(func(ev *js.Object) {
-			println("ws message: " + ev.Get("data").String())
+		wss.SetAdminWsOnMessage(func(ev *js.Object) {
+			println("admin ws message: " + ev.Get("data").String())
 			b := []byte(ev.Get("data").String())
 			wsd := services.WsData{}
 			json.Unmarshal(b, &wsd)
@@ -50,19 +44,55 @@ func EnableWebsocket() {
 			case services.WS_THEME_DOWNLOAD_PROGRESS_MOVIE:
 				wsm, err := wss.SerializeProgressMovie(wsd)
 				if err != nil {
-					println("ws error: " + err.Error())
+					println("admin ws error: " + err.Error())
 					return
 				}
 				UpdateMovieProgress(*wsm)
 			default:
-				println("ws error: could not find the 'theme' of the ws message.")
+				println("admin ws error: could not find the 'theme' of the ws message.")
 			}
 		})
-		wss.SetOnClose(func(ev *js.Object) {
-			println("ws close: " + ev.Get("data").String())
+		wss.SetAdminWsOnClose(func(ev *js.Object) {
+			println("admin ws close: " + ev.Get("data").String())
 		})
-		wss.SetOnOpen(func(ev *js.Object) {
-			println("ws open: " + ev.Get("data").String())
+		wss.SetAdminWsOnOpen(func(ev *js.Object) {
+			println("admin ws open: " + ev.Get("data").String())
 		})
+		wss.SetPlayerWsOnMessage(func(ev *js.Object) {
+			println("playerws message: " + ev.Get("data").String())
+			b := []byte(ev.Get("data").String())
+			wsd := services.WsData{}
+			json.Unmarshal(b, &wsd)
+			switch wsd.Theme {
+			case services.WS_THEME_PLAYER_ACTION:
+				mpa, err := wss.SerializeMovieAction(wsd)
+				if err != nil {
+					println("player ws error: " + err.Error())
+					return
+				}
+				videoPlayer := js.Global.Get("document").Call("getElementById", "media-video")
+				switch mpa.Action {
+				case services.PLAY:
+					videoPlayer.Call("play")
+				case services.PAUSE:
+					videoPlayer.Call("pause")
+				case services.STOP:
+					videoPlayer.Call("pause")
+					videoPlayer.Set("currentTime", 0)
+				default:
+					println("player ws error: unknown player action")
+				}
+			default:
+				println("player ws error: could not find the 'theme' of the ws message.")
+			}
+
+		})
+		wss.SetPlayerWsOnClose(func(ev *js.Object) {
+			println("player ws close: " + ev.Get("data").String())
+		})
+		wss.SetPlayerWsOnOpen(func(ev *js.Object) {
+			println("player ws open: " + ev.Get("data").String())
+		})
+
 	}()
 }

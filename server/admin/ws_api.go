@@ -15,21 +15,25 @@ import (
 )
 
 type adminWsApi struct {
-	m      *melody.Melody
-	admins []*melody.Session
+	m            *melody.Melody
+	admins       []*melody.Session
+	commonPlayer *utils.CommonMoviePlayer
+	config       conf.Configuration
 }
 
-func NewAdminWsApi() *adminWsApi {
+func NewAdminWsApi(config conf.Configuration, commonPlayer *utils.CommonMoviePlayer) *adminWsApi {
 	a := &adminWsApi{}
 	a.m = melody.New()
 	a.admins = []*melody.Session{}
+	a.commonPlayer = commonPlayer
+	a.config = config
 	return a
 }
 
-func (wa *adminWsApi) HttpFunc(config conf.Configuration) func(echo.Context) error {
+func (wa *adminWsApi) HttpFunc() func(echo.Context) error {
 	return func(c echo.Context) error {
 		tokenString := c.QueryParam("token")
-		isAdmin, errMsg := utils.ReadAdminTokenString(config, tokenString)
+		isAdmin, errMsg := utils.ReadAdminTokenString(wa.config, tokenString)
 		if errMsg != nil {
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
@@ -40,6 +44,7 @@ func (wa *adminWsApi) HttpFunc(config conf.Configuration) func(echo.Context) err
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
 		wa.m.HandleConnect(wa.onConnection)
+		wa.m.HandleMessage(wa.onMessage)
 		wa.m.HandleRequest(c.Response(), c.Request())
 		return nil
 	}
@@ -50,34 +55,33 @@ func (wa *adminWsApi) onConnection(s *melody.Session) {
 	wa.admins = append(wa.admins, s)
 }
 
-type WsTheme string
-
-const (
-	WS_THEME_DOWNLOAD_PROGRESS_MOVIE = WsTheme("download_progress_movie")
-)
-
-type WsData struct {
-	Theme WsTheme     `json:"theme"`
-	Data  interface{} `json:"data"`
-}
-
-type WsProgressMovieJson struct {
-	ID       string  `json:"id"`
-	State    string  `json:"state"`
-	Progress float64 `json:"progress"`
-	Filetype string  `json:"file_type"`
+func (wa *adminWsApi) onMessage(s *melody.Session, msg []byte) {
+	wd := utils.WsData{}
+	json.Unmarshal(msg, &wd)
+	log.Println("Received from admin's WS :" + string(msg))
+	switch wd.Theme {
+	case utils.WS_THEME_PLAYER_ACTION:
+		b, _ := json.Marshal(wd.Data)
+		a := utils.MoviePlayerAction{}
+		err := json.Unmarshal(b, &a)
+		if err != nil {
+			log.Println("Error: the message is not action.")
+			return
+		}
+		wa.commonPlayer.Sender(a)
+	}
 }
 
 func (wa *adminWsApi) SendProgressOfMovie(dbm *db.DbMovie) {
 	log.Println("send to ", wa.admins)
 	for _, v := range wa.admins {
-		wp := WsProgressMovieJson{}
+		wp := utils.WsProgressMovieJson{}
 		wp.ID = dbm.ID
 		wp.Progress = dbm.Progress
 		wp.State = dbm.State.String()
 		wp.Filetype = dbm.Filetype.String()
-		wd := WsData{
-			Theme: WS_THEME_DOWNLOAD_PROGRESS_MOVIE,
+		wd := utils.WsData{
+			Theme: utils.WS_THEME_DOWNLOAD_PROGRESS_MOVIE,
 			Data:  wp,
 		}
 		b, _ := json.Marshal(wd)
