@@ -7,13 +7,17 @@ type CommonMoviePlayer struct {
 type MoviePlayerActionType string
 
 const (
-	PLAY  = MoviePlayerActionType("play")
-	STOP  = MoviePlayerActionType("stop")
-	PAUSE = MoviePlayerActionType("pause")
+	PLAY                 = MoviePlayerActionType("play")
+	STOP                 = MoviePlayerActionType("stop")
+	PAUSE                = MoviePlayerActionType("pause")
+	CURRENT_TIME         = MoviePlayerActionType("current_time")
+	REQUEST_CURRENT_TIME = MoviePlayerActionType("request_current_time")
 )
 
 type MoviePlayerAction struct {
-	Action MoviePlayerActionType `json:"action"`
+	Action    MoviePlayerActionType `json:"action"`
+	Time      float64               `json:"time"`
+	IsPlaying bool                  `json:"is_playing"`
 }
 
 func NewCommonMoviePlayer() *CommonMoviePlayer {

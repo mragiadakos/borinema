@@ -50,6 +50,22 @@ type WsProgressMovieJson struct {
 	Filetype string  `json:"file_type"`
 }
 
+type MoviePlayerActionType string
+
+type MoviePlayerAction struct {
+	Action    MoviePlayerActionType `json:"action"`
+	Time      float64               `json:"time"`
+	IsPlaying bool                  `json:"is_playing"`
+}
+
+const (
+	PLAY                 = MoviePlayerActionType("play")
+	STOP                 = MoviePlayerActionType("stop")
+	PAUSE                = MoviePlayerActionType("pause")
+	REQUEST_CURRENT_TIME = MoviePlayerActionType("request_current_time")
+	CURRENT_TIME         = MoviePlayerActionType("current_time")
+)
+
 func (wss *WsService) SerializeProgressMovie(data WsData) (*WsProgressMovieJson, error) {
 	jm, ok := data.Data.(map[string]interface{})
 	if !ok {
@@ -87,7 +103,17 @@ func (wss *WsService) SerializeMovieAction(data WsData) (*MoviePlayerAction, err
 	if !ok {
 		return nil, errors.New("The 'data' is missing the key 'action' ")
 	}
+	t, ok := jm["time"].(float64)
+	if !ok {
+		return nil, errors.New("The 'data' is missing the key 'time' ")
+	}
+	isPlaying, ok := jm["is_playing"].(bool)
+	if !ok {
+		return nil, errors.New("The 'data' is missing the key 'is_playing' ")
+	}
 	mpa.Action = MoviePlayerActionType(action)
+	mpa.Time = t
+	mpa.IsPlaying = isPlaying
 	return &mpa, nil
 }
 
@@ -115,20 +141,22 @@ func (wss *WsService) SetPlayerWsOnClose(f func(ev *js.Object)) {
 	PlayerWs.AddEventListener("close", false, f)
 }
 
-type MoviePlayerActionType string
-
-type MoviePlayerAction struct {
-	Action MoviePlayerActionType `json:"action"`
-}
-
-const (
-	PLAY  = MoviePlayerActionType("play")
-	STOP  = MoviePlayerActionType("stop")
-	PAUSE = MoviePlayerActionType("pause")
-)
-
 func (wss *WsService) SendMoviePlayerActionToAdmin(action MoviePlayerActionType) {
 	mpa := MoviePlayerAction{Action: action}
+	wd := WsData{
+		Theme: WS_THEME_PLAYER_ACTION,
+		Data:  mpa,
+	}
+	b, _ := json.Marshal(wd)
+	println("sended " + string(b))
+	err := AdminWs.Send(string(b))
+	if err != nil {
+		println("Error: " + err.Error())
+	}
+}
+
+func (wss *WsService) SendCurrentTimeToAdmin(action MoviePlayerActionType, t float64, isPlaying bool) {
+	mpa := MoviePlayerAction{Action: action, Time: t, IsPlaying: isPlaying}
 	wd := WsData{
 		Theme: WS_THEME_PLAYER_ACTION,
 		Data:  mpa,

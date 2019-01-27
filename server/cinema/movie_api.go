@@ -11,18 +11,20 @@ import (
 )
 
 type movieApi struct {
-	db     *gorm.DB
-	config conf.Configuration
+	db                 *gorm.DB
+	config             conf.Configuration
+	requestCurrentTime func()
 }
 
-func NewCinemaMovieApi(db *gorm.DB, config conf.Configuration) *movieApi {
+func NewCinemaMovieApi(db *gorm.DB, config conf.Configuration, requestCurrentTimeWs func()) *movieApi {
 	ma := &movieApi{}
 	ma.db = db
 	ma.config = config
+	ma.requestCurrentTime = requestCurrentTimeWs
 	return ma
 }
 
-func (ma *movieApi) GetMovie() func(c echo.Context) error {
+func (ma *movieApi) GetMovieVideo() func(c echo.Context) error {
 	return func(c echo.Context) error {
 		uuid := c.Param("id")
 		dbm, err := db.GetMovieByUuid(ma.db, uuid)
@@ -37,12 +39,16 @@ func (ma *movieApi) GetMovie() func(c echo.Context) error {
 }
 
 type MovieInfoOutput struct {
-	Name string `json:"name"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Filetype string `json:"filetype"`
 }
 
 func (ma *movieApi) serializeMovieInfo(dm db.DbMovie) MovieInfoOutput {
 	gmo := MovieInfoOutput{}
 	gmo.Name = dm.Name
+	gmo.ID = dm.ID
+	gmo.Filetype = string(dm.Filetype)
 	return gmo
 }
 
@@ -55,7 +61,25 @@ func (ma *movieApi) GetMovieInfo() func(c echo.Context) error {
 			errMsg.Error = ERR_MOVIE_NOT_FOUND
 			return c.JSON(errMsg.Status, errMsg.Json())
 		}
+
 		mio := ma.serializeMovieInfo(*dbm)
 		return c.JSON(http.StatusOK, mio)
+	}
+}
+
+func (ma *movieApi) RequestCurrentTime() func(c echo.Context) error {
+	return func(c echo.Context) error {
+		_, err := db.GetMovieBySelected(ma.db)
+		if err != nil {
+			return c.JSON(http.StatusUnprocessableEntity, nil)
+		}
+		ma.requestCurrentTime()
+		return c.JSON(http.StatusOK, nil)
+	}
+}
+
+func (ma *movieApi) CinemaPage() func(c echo.Context) error {
+	return func(c echo.Context) error {
+		return c.File("cinema_panel/index.html")
 	}
 }

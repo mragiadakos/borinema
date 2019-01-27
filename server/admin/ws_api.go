@@ -74,17 +74,31 @@ func (wa *adminWsApi) onMessage(s *melody.Session, msg []byte) {
 
 func (wa *adminWsApi) SendProgressOfMovie(dbm *db.DbMovie) {
 	log.Println("send to ", wa.admins)
+	wp := utils.WsProgressMovieJson{}
+	wp.ID = dbm.ID
+	wp.Progress = dbm.Progress
+	wp.State = dbm.State.String()
+	wp.Filetype = dbm.Filetype.String()
+	wd := utils.WsData{
+		Theme: utils.WS_THEME_DOWNLOAD_PROGRESS_MOVIE,
+		Data:  wp,
+	}
+	b, _ := json.Marshal(wd)
 	for _, v := range wa.admins {
-		wp := utils.WsProgressMovieJson{}
-		wp.ID = dbm.ID
-		wp.Progress = dbm.Progress
-		wp.State = dbm.State.String()
-		wp.Filetype = dbm.Filetype.String()
-		wd := utils.WsData{
-			Theme: utils.WS_THEME_DOWNLOAD_PROGRESS_MOVIE,
-			Data:  wp,
-		}
-		b, _ := json.Marshal(wd)
+
+		v.Write(b)
+	}
+}
+
+func (wa *adminWsApi) RequestCurrentTime() {
+	a := utils.MoviePlayerAction{}
+	a.Action = utils.REQUEST_CURRENT_TIME
+	wd := utils.WsData{
+		Theme: utils.WS_THEME_PLAYER_ACTION,
+		Data:  a,
+	}
+	b, _ := json.Marshal(wd)
+	for _, v := range wa.admins {
 		v.Write(b)
 	}
 }

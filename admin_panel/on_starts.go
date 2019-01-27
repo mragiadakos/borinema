@@ -34,6 +34,7 @@ func UpdateMovieProgress(wsm services.WsProgressMovieJson) {
 
 func EnableWebsocket() {
 	go func() {
+		movieIsPlaying := false
 		wss := &services.WsService{}
 		wss.SetAdminWsOnMessage(func(ev *js.Object) {
 			println("admin ws message: " + ev.Get("data").String())
@@ -48,6 +49,17 @@ func EnableWebsocket() {
 					return
 				}
 				UpdateMovieProgress(*wsm)
+			case services.WS_THEME_PLAYER_ACTION:
+				mpa, err := wss.SerializeMovieAction(wsd)
+				if err != nil {
+					println("player ws error: " + err.Error())
+					return
+				}
+				if mpa.Action == services.REQUEST_CURRENT_TIME {
+					videoPlayer := js.Global.Get("document").Call("getElementById", "media-video")
+					currentTime := videoPlayer.Get("currentTime").Float()
+					wss.SendCurrentTimeToAdmin(services.CURRENT_TIME, currentTime, movieIsPlaying)
+				}
 			default:
 				println("admin ws error: could not find the 'theme' of the ws message.")
 			}
@@ -74,11 +86,16 @@ func EnableWebsocket() {
 				switch mpa.Action {
 				case services.PLAY:
 					videoPlayer.Call("play")
+					movieIsPlaying = true
 				case services.PAUSE:
 					videoPlayer.Call("pause")
+					movieIsPlaying = false
 				case services.STOP:
 					videoPlayer.Call("pause")
 					videoPlayer.Set("currentTime", 0)
+					movieIsPlaying = false
+				case services.CURRENT_TIME:
+					videoPlayer.Set("currentTime", mpa.Time)
 				default:
 					println("player ws error: unknown player action")
 				}

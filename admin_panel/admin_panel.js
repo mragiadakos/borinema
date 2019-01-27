@@ -38057,13 +38057,17 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		this.Filetype = Filetype_;
 	});
 	MoviePlayerActionType = $pkg.MoviePlayerActionType = $newType(8, $kindString, "services.MoviePlayerActionType", true, "github.com/mragiadakos/borinema/admin_panel/services", true, null);
-	MoviePlayerAction = $pkg.MoviePlayerAction = $newType(0, $kindStruct, "services.MoviePlayerAction", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(Action_) {
+	MoviePlayerAction = $pkg.MoviePlayerAction = $newType(0, $kindStruct, "services.MoviePlayerAction", true, "github.com/mragiadakos/borinema/admin_panel/services", true, function(Action_, Time_, IsPlaying_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Action = "";
+			this.Time = 0;
+			this.IsPlaying = false;
 			return;
 		}
 		this.Action = Action_;
+		this.Time = Time_;
+		this.IsPlaying = IsPlaying_;
 	});
 	ptrType = $ptrType(websocketjs.WebSocket);
 	mapType = $mapType($String, $emptyInterface);
@@ -38540,7 +38544,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	};
 	WsService.prototype.SerializeProgressMovie = function(data) { return this.$val.SerializeProgressMovie(data); };
 	WsService.ptr.prototype.SerializeMovieAction = function(data) {
-		var _entry, _tuple, _tuple$1, action, data, jm, mpa, ok, wss;
+		var _entry, _entry$1, _entry$2, _tuple, _tuple$1, _tuple$2, _tuple$3, action, data, isPlaying, jm, mpa, ok, t, wss;
 		wss = this;
 		_tuple = $assertType(data.Data, mapType, true);
 		jm = _tuple[0];
@@ -38548,14 +38552,28 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		if (!ok) {
 			return [ptrType$9.nil, errors.New("The 'data' is not type of map[string]interface ")];
 		}
-		mpa = new MoviePlayerAction.ptr("");
+		mpa = new MoviePlayerAction.ptr("", 0, false);
 		_tuple$1 = $assertType((_entry = jm[$String.keyFor("action")], _entry !== undefined ? _entry.v : $ifaceNil), $String, true);
 		action = _tuple$1[0];
 		ok = _tuple$1[1];
 		if (!ok) {
 			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'action' ")];
 		}
+		_tuple$2 = $assertType((_entry$1 = jm[$String.keyFor("time")], _entry$1 !== undefined ? _entry$1.v : $ifaceNil), $Float64, true);
+		t = _tuple$2[0];
+		ok = _tuple$2[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'time' ")];
+		}
+		_tuple$3 = $assertType((_entry$2 = jm[$String.keyFor("is_playing")], _entry$2 !== undefined ? _entry$2.v : $ifaceNil), $Bool, true);
+		isPlaying = _tuple$3[0];
+		ok = _tuple$3[1];
+		if (!ok) {
+			return [ptrType$9.nil, errors.New("The 'data' is missing the key 'is_playing' ")];
+		}
 		mpa.Action = (action);
+		mpa.Time = t;
+		mpa.IsPlaying = isPlaying;
 		return [mpa, $ifaceNil];
 	};
 	WsService.prototype.SerializeMovieAction = function(data) { return this.$val.SerializeMovieAction(data); };
@@ -38599,7 +38617,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		var _r, _r$1, _tuple, action, b, err, mpa, wd, wss, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; action = $f.action; b = $f.b; err = $f.err; mpa = $f.mpa; wd = $f.wd; wss = $f.wss; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		wss = this;
-		mpa = new MoviePlayerAction.ptr(action);
+		mpa = new MoviePlayerAction.ptr(action, 0, false);
 		wd = new WsData.ptr("player_action", new mpa.constructor.elem(mpa));
 		_r = json$1.Marshal(new wd.constructor.elem(wd)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
@@ -38616,9 +38634,30 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 		/* */ } return; } if ($f === undefined) { $f = { $blk: WsService.ptr.prototype.SendMoviePlayerActionToAdmin }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.action = action; $f.b = b; $f.err = err; $f.mpa = mpa; $f.wd = wd; $f.wss = wss; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	WsService.prototype.SendMoviePlayerActionToAdmin = function(action) { return this.$val.SendMoviePlayerActionToAdmin(action); };
+	WsService.ptr.prototype.SendCurrentTimeToAdmin = function(action, t, isPlaying) {
+		var _r, _r$1, _tuple, action, b, err, isPlaying, mpa, t, wd, wss, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; action = $f.action; b = $f.b; err = $f.err; isPlaying = $f.isPlaying; mpa = $f.mpa; t = $f.t; wd = $f.wd; wss = $f.wss; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		wss = this;
+		mpa = new MoviePlayerAction.ptr(action, t, isPlaying);
+		wd = new WsData.ptr("player_action", new mpa.constructor.elem(mpa));
+		_r = json$1.Marshal(new wd.constructor.elem(wd)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		b = _tuple[0];
+		console.log("sended " + ($bytesToString(b)));
+		err = $pkg.AdminWs.Send(new $String(($bytesToString(b))));
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			console.log("Error: " + _r$1);
+		/* } */ case 3:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WsService.ptr.prototype.SendCurrentTimeToAdmin }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.action = action; $f.b = b; $f.err = err; $f.isPlaying = isPlaying; $f.mpa = mpa; $f.t = t; $f.wd = wd; $f.wss = wss; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WsService.prototype.SendCurrentTimeToAdmin = function(action, t, isPlaying) { return this.$val.SendCurrentTimeToAdmin(action, t, isPlaying); };
 	AuthService.methods = [{prop: "PostLogin", name: "PostLogin", pkg: "", typ: $funcType([AuthorizationJson], [$String, ptrType$2], false)}, {prop: "GetIsAdmin", name: "GetIsAdmin", pkg: "", typ: $funcType([], [$Bool, ptrType$2], false)}, {prop: "SaveToken", name: "SaveToken", pkg: "", typ: $funcType([$String], [], false)}, {prop: "RemoveToken", name: "RemoveToken", pkg: "", typ: $funcType([], [], false)}, {prop: "GetToken", name: "GetToken", pkg: "", typ: $funcType([], [$String], false)}];
 	MovieService.methods = [{prop: "AddMovie", name: "AddMovie", pkg: "", typ: $funcType([AddMovieJson], [ptrType$3, ptrType$2], false)}, {prop: "GetMovies", name: "GetMovies", pkg: "", typ: $funcType([PaginationJson], [sliceType$1, ptrType$2], false)}, {prop: "GetMovie", name: "GetMovie", pkg: "", typ: $funcType([$String], [ptrType$6, ptrType$2], false)}, {prop: "DeleteMovie", name: "DeleteMovie", pkg: "", typ: $funcType([$String], [ptrType$2], false)}, {prop: "RemoveMovieSelection", name: "RemoveMovieSelection", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "SelectMovie", name: "SelectMovie", pkg: "", typ: $funcType([$String], [ptrType$2], false)}];
-	ptrType$11.methods = [{prop: "SerializeProgressMovie", name: "SerializeProgressMovie", pkg: "", typ: $funcType([WsData], [ptrType$8, $error], false)}, {prop: "SerializeMovieAction", name: "SerializeMovieAction", pkg: "", typ: $funcType([WsData], [ptrType$9, $error], false)}, {prop: "SetAdminWsOnMessage", name: "SetAdminWsOnMessage", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnMessage", name: "SetPlayerWsOnMessage", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetAdminWsOnOpen", name: "SetAdminWsOnOpen", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnOpen", name: "SetPlayerWsOnOpen", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetAdminWsOnClose", name: "SetAdminWsOnClose", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnClose", name: "SetPlayerWsOnClose", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SendMoviePlayerActionToAdmin", name: "SendMoviePlayerActionToAdmin", pkg: "", typ: $funcType([MoviePlayerActionType], [], false)}];
+	ptrType$11.methods = [{prop: "SerializeProgressMovie", name: "SerializeProgressMovie", pkg: "", typ: $funcType([WsData], [ptrType$8, $error], false)}, {prop: "SerializeMovieAction", name: "SerializeMovieAction", pkg: "", typ: $funcType([WsData], [ptrType$9, $error], false)}, {prop: "SetAdminWsOnMessage", name: "SetAdminWsOnMessage", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnMessage", name: "SetPlayerWsOnMessage", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetAdminWsOnOpen", name: "SetAdminWsOnOpen", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnOpen", name: "SetPlayerWsOnOpen", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetAdminWsOnClose", name: "SetAdminWsOnClose", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SetPlayerWsOnClose", name: "SetPlayerWsOnClose", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "SendMoviePlayerActionToAdmin", name: "SendMoviePlayerActionToAdmin", pkg: "", typ: $funcType([MoviePlayerActionType], [], false)}, {prop: "SendCurrentTimeToAdmin", name: "SendCurrentTimeToAdmin", pkg: "", typ: $funcType([MoviePlayerActionType, $Float64, $Bool], [], false)}];
 	ErrorMsg.init("", [{prop: "VariableErrors", name: "VariableErrors", embedded: false, exported: true, typ: mapType$1, tag: "json:\"variable_errors\""}, {prop: "Error", name: "Error", embedded: false, exported: true, typ: $String, tag: "json:\"error\""}]);
 	AuthorizationJson.init("", [{prop: "Username", name: "Username", embedded: false, exported: true, typ: $String, tag: "json:\"username\""}, {prop: "Password", name: "Password", embedded: false, exported: true, typ: $String, tag: "json:\"password\""}]);
 	TokenJson.init("", [{prop: "Token", name: "Token", embedded: false, exported: true, typ: $String, tag: "json:\"token\""}]);
@@ -38631,7 +38670,7 @@ $packages["github.com/mragiadakos/borinema/admin_panel/services"] = (function() 
 	WsService.init("", []);
 	WsData.init("", [{prop: "Theme", name: "Theme", embedded: false, exported: true, typ: $String, tag: "json:\"theme\""}, {prop: "Data", name: "Data", embedded: false, exported: true, typ: $emptyInterface, tag: "json:\"data\""}]);
 	WsProgressMovieJson.init("", [{prop: "Id", name: "Id", embedded: false, exported: true, typ: $String, tag: "json:\"id\""}, {prop: "State", name: "State", embedded: false, exported: true, typ: $String, tag: "json:\"state\""}, {prop: "Progress", name: "Progress", embedded: false, exported: true, typ: $Float64, tag: "json:\"progress\""}, {prop: "Filetype", name: "Filetype", embedded: false, exported: true, typ: $String, tag: "json:\"file_type\""}]);
-	MoviePlayerAction.init("", [{prop: "Action", name: "Action", embedded: false, exported: true, typ: MoviePlayerActionType, tag: "json:\"action\""}]);
+	MoviePlayerAction.init("", [{prop: "Action", name: "Action", embedded: false, exported: true, typ: MoviePlayerActionType, tag: "json:\"action\""}, {prop: "Time", name: "Time", embedded: false, exported: true, typ: $Float64, tag: "json:\"time\""}, {prop: "IsPlaying", name: "IsPlaying", embedded: false, exported: true, typ: $Bool, tag: "json:\"is_playing\""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -48401,11 +48440,12 @@ $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
 	$pkg.UpdateMovieProgress = UpdateMovieProgress;
 	EnableWebsocket = function() {
 		$go((function() {
-			var wss;
+			var movieIsPlaying, wss;
+			movieIsPlaying = false;
 			wss = new services.WsService.ptr();
 			wss.SetAdminWsOnMessage((function $b(ev) {
-				var _1, _r, _r$1, _tuple, b, err, ev, wsd, wsm, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; b = $f.b; err = $f.err; ev = $f.ev; wsd = $f.wsd; wsm = $f.wsm; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				var _1, _r, _r$1, _r$2, _tuple, _tuple$1, b, currentTime, err, err$1, ev, mpa, videoPlayer, wsd, wsm, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; b = $f.b; currentTime = $f.currentTime; err = $f.err; err$1 = $f.err$1; ev = $f.ev; mpa = $f.mpa; videoPlayer = $f.videoPlayer; wsd = $f.wsd; wsm = $f.wsm; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				wsd = [wsd];
 				console.log("admin ws message: " + $internalize(ev.data, $String));
 				b = (new sliceType$1($stringToBytes($internalize(ev.data, $String))));
@@ -48414,26 +48454,46 @@ $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
 				_r;
 					_1 = wsd[0].Theme;
 					/* */ if (_1 === ("download_progress_movie")) { $s = 3; continue; }
-					/* */ $s = 4; continue;
+					/* */ if (_1 === ("player_action")) { $s = 4; continue; }
+					/* */ $s = 5; continue;
 					/* if (_1 === ("download_progress_movie")) { */ case 3:
 						_tuple = wss.SerializeProgressMovie($clone(wsd[0], services.WsData));
 						wsm = _tuple[0];
 						err = _tuple[1];
-						/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 6; continue; }
-						/* */ $s = 7; continue;
-						/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 6:
-							_r$1 = err.Error(); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+						/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 7; continue; }
+						/* */ $s = 8; continue;
+						/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 7:
+							_r$1 = err.Error(); /* */ $s = 9; case 9: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 							console.log("admin ws error: " + _r$1);
 							$s = -1; return;
-						/* } */ case 7:
+						/* } */ case 8:
 						UpdateMovieProgress($clone(wsm, services.WsProgressMovieJson));
-						$s = 5; continue;
-					/* } else { */ case 4:
+						$s = 6; continue;
+					/* } else if (_1 === ("player_action")) { */ case 4:
+						_tuple$1 = wss.SerializeMovieAction($clone(wsd[0], services.WsData));
+						mpa = _tuple$1[0];
+						err$1 = _tuple$1[1];
+						/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 10; continue; }
+						/* */ $s = 11; continue;
+						/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 10:
+							_r$2 = err$1.Error(); /* */ $s = 12; case 12: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+							console.log("player ws error: " + _r$2);
+							$s = -1; return;
+						/* } */ case 11:
+						/* */ if (mpa.Action === "request_current_time") { $s = 13; continue; }
+						/* */ $s = 14; continue;
+						/* if (mpa.Action === "request_current_time") { */ case 13:
+							videoPlayer = $global.document.getElementById($externalize("media-video", $String));
+							currentTime = $parseFloat(videoPlayer.currentTime);
+							$r = wss.SendCurrentTimeToAdmin("current_time", currentTime, movieIsPlaying); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						/* } */ case 14:
+						$s = 6; continue;
+					/* } else { */ case 5:
 						console.log("admin ws error: could not find the 'theme' of the ws message.");
-					/* } */ case 5:
+					/* } */ case 6:
 				case 2:
 				$s = -1; return;
-				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.b = b; $f.err = err; $f.ev = ev; $f.wsd = wsd; $f.wsm = wsm; $f.$s = $s; $f.$r = $r; return $f;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.b = b; $f.currentTime = currentTime; $f.err = err; $f.err$1 = err$1; $f.ev = ev; $f.mpa = mpa; $f.videoPlayer = videoPlayer; $f.wsd = wsd; $f.wsm = wsm; $f.$s = $s; $f.$r = $r; return $f;
 			}));
 			wss.SetAdminWsOnClose((function(ev) {
 				var ev;
@@ -48470,11 +48530,16 @@ $packages["github.com/mragiadakos/borinema/admin_panel"] = (function() {
 						_3 = mpa.Action;
 						if (_3 === ("play")) {
 							videoPlayer.play();
+							movieIsPlaying = true;
 						} else if (_3 === ("pause")) {
 							videoPlayer.pause();
+							movieIsPlaying = false;
 						} else if (_3 === ("stop")) {
 							videoPlayer.pause();
 							videoPlayer.currentTime = 0;
+							movieIsPlaying = false;
+						} else if (_3 === ("current_time")) {
+							videoPlayer.currentTime = mpa.Time;
 						} else {
 							console.log("player ws error: unknown player action");
 						}

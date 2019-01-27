@@ -29,15 +29,16 @@ func Run(config conf.Configuration) {
 	aa := admin.NewAdminApi(db, config)
 	wa := admin.NewAdminWsApi(config, cp)
 	wc := cinema.NewCinemaWsApi(cp)
-	cma := cinema.NewCinemaMovieApi(db, config)
+	cma := cinema.NewCinemaMovieApi(db, config, wa.RequestCurrentTime)
 
 	r.POST("/api/login", aa.Login())
 	r.GET("/api/admin/ws", wa.HttpFunc())
 	r.GET("/api/player/ws", wc.HttpFunc())
 
 	cinemaGroup := r.Group("/api/cinema")
-	cinemaGroup.GET("/movie/:id", cma.GetMovie())
-	cinemaGroup.GET("/movie/info", cma.GetMovieInfo())
+	cinemaGroup.GET("/movie/:id", cma.GetMovieVideo())
+	cinemaGroup.GET("/movie", cma.GetMovieInfo())
+	cinemaGroup.POST("/currentTime", cma.RequestCurrentTime())
 
 	adminGroup := r.Group("/api/admin")
 	jwtConfig := middleware.JWTConfig{
@@ -57,7 +58,9 @@ func Run(config conf.Configuration) {
 	adminGroup.PUT("/movies/:id/select", aa.SelectMovie())
 	adminGroup.GET("/movies", aa.GetMovies())
 
+	r.GET("/", cma.CinemaPage())
 	r.GET("/admin", aa.AdminPage())
 	r.Static("/admin_panel", "admin_panel")
+	r.Static("/cinema_panel", "cinema_panel")
 	r.Start(":" + config.Port)
 }
